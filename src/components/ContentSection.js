@@ -1,6 +1,6 @@
 import React from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
-import { PlusIcon, XMarkIcon, CheckIcon, ChevronDownIcon, PhotoIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, XMarkIcon, ChevronDownIcon, PhotoIcon } from '@heroicons/react/24/outline';
 import { v4 as uuidv4 } from 'uuid';
 
 const ContentSection = ({ sections, onUpdateSection }) => {
