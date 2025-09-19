@@ -1,0 +1,85 @@
+{
+  "name": "amazon-dhc-onboarding-react",
+  "version": "2.0.0",
+  "description": "Amazon DHC Onboarding Tool - React + Electron",
+  "main": "electron/main.js",
+  "homepage": "./",
+  "scripts": {
+    "dev": "concurrently \"npm run react-dev\" \"wait-on http://localhost:3000 && npm run electron-dev\"",
+    "react-dev": "react-scripts start",
+    "electron-dev": "ELECTRON_IS_DEV=1 electron .",
+    "build": "npm run react-build && npm run electron-pack",
+    "react-build": "react-scripts build",
+    "electron-pack": "electron-builder",
+    "build-css": "npx tailwindcss -i ./src/styles/tailwind.css -o ./src/styles/compiled.css",
+    "build-css-watch": "npx tailwindcss -i ./src/styles/tailwind.css -o ./src/styles/compiled.css --watch",
+    "start": "npm run build-css && npm run dev",
+    "dist": "npm run react-build && electron-builder",
+    "dist-win": "npm run react-build && electron-builder --win",
+    "dist-mac": "npm run react-build && electron-builder --mac",
+    "dist-linux": "npm run react-build && electron-builder --linux"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "@heroicons/react": "^2.0.18",
+    "lucide-react": "^0.263.1",
+    "react-beautiful-dnd": "^13.1.1",
+    "react-dropzone": "^14.2.3",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
+    "file-saver": "^2.0.5",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "electron": "^25.3.1",
+    "electron-builder": "^24.6.3",
+    "concurrently": "^8.2.0",
+    "wait-on": "^7.0.1",
+    "tailwindcss": "^3.4.0",
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.24",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7"
+  },
+  "build": {
+    "appId": "com.amazon.dhc.onboarding.react",
+    "productName": "Amazon DHC Onboarding React",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "build/**/*",
+      "electron/**/*",
+      "node_modules/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.productivity"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
+
+
+
+
+

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" class="a-no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon DHC Onboarding Tool</title>
+    <link rel="stylesheet" href="styles-compiled.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FF9900">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Amazon Onboarding">
+</head>
+<body class="a-m-us">
+<div id="a-page">
+    <!-- Amazon Header -->
+    <header id="navbar-main" class="nav-opt-sprite nav-flex nav-locale-us nav-lang-en nav-ssl nav-unrec nav-progressive-attribute">
+        <div id="navbar" class="nav-sprite-v1 celwidget nav-bluebeacon nav-a11y-t1 bold-focus-hover layout2 nav-flex layout3 layout3-alt nav-fresh nav-packard-glow hamburger nav-progressive-attribute using-mouse">
+            <div id="nav-belt" class="amazon-header-gradient h-15 flex items-center px-4">
+                <div class="nav-left flex items-center">
+                    <div id="nav-logo" class="flex items-center mr-4">
+                        <a href="#" class="nav-logo-link nav-progressive-attribute flex items-center text-white no-underline" aria-label="Amazon">
+                            <span class="amazon-logo text-2xl font-bold tracking-tight"></span>
+                            <span class="nav-logo-locale text-xs ml-1">.us</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Search Bar -->
+                <div class="nav-fill flex-1 max-w-3xl mx-6">
+                    <div id="nav-search" class="relative">
+                        <form id="nav-search-bar-form" class="nav-searchbar nav-progressive-attribute flex h-10" method="GET" role="search">
+                            <div class="nav-fill flex-1">
+                                <div class="nav-search-field">
+                                    <input type="text" id="twotabsearchtextbox" name="field-keywords" autocomplete="off" placeholder="Search Amazon" class="nav-input nav-progressive-attribute w-full h-full px-3 py-0 border-2 border-amazon-orange rounded-l border-r-0 focus:outline-none focus:ring-0 focus:border-amazon-orange text-sm" dir="auto" tabindex="0" aria-label="Search">
+                                </div>
+                            </div>
+                            <div class="nav-right">
+                                <div class="nav-search-submit bg-amazon-orange hover:bg-amazon-orange-dark h-full px-3 flex items-center justify-center rounded-r cursor-pointer border-2 border-amazon-orange">
+                                    <svg class="w-4 h-4 text-amazon-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="nav-right flex items-center space-x-4 mr-4">
+                    <!-- Account -->
+                    <a href="#" class="nav-a nav-a-2 nav-progressive-attribute text-white hover:border hover:border-white rounded px-2 py-1 text-center" id="nav-link-accountList" tabindex="0">
+                        <div class="nav-line-1-container">
+                            <span class="nav-line-1 nav-progressive-content text-xs leading-3">Hello, sign in</span>
+                        </div>
+                        <span class="nav-line-2 text-sm font-bold leading-4 block">
+                            Account & Lists
+                            <span class="nav-icon nav-arrow ml-1 text-xs">▼</span>
+                        </span>
+                    </a>
+                    
+                    <!-- Orders -->
+                    <a href="#" class="nav-a nav-a-2 nav-progressive-attribute text-white hover:border hover:border-white rounded px-2 py-1 text-center" id="nav-orders" tabindex="0">
+                        <span class="nav-line-1 text-xs leading-3 block">Returns</span>
+                        <span class="nav-line-2 text-sm font-bold leading-4 block">& Orders</span>
+                    </a>
+                    
+                    <!-- Cart -->
+                    <a href="#" class="nav-a nav-a-2 nav-progressive-attribute text-white hover:border hover:border-white rounded px-2 py-1 flex items-center" id="nav-cart">
+                        <div id="nav-cart-count-container" class="relative mr-2">
+                            <span id="nav-cart-count" class="nav-cart-count absolute -top-1 -right-1 bg-amazon-orange text-amazon-text rounded-full w-4 h-4 flex items-center justify-center text-xs font-bold">0</span>
+                            <svg class="w-8 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M7 4V2C7 1.45 7.45 1 8 1H16C16.55 1 17 1.45 17 2V4H20C20.55 4 21 4.45 21 5S20.55 6 20 6H19V19C19 20.1 18.1 21 17 21H7C5.9 21 5 20.1 5 19V6H4C3.45 6 3 5.55 3 5S3.45 4 4 4H7ZM9 3V4H15V3H9ZM7 6V19H17V6H7Z"/>
+                            </svg>
+                        </div>
+                        <div id="nav-cart-text-container" class="nav-progressive-attribute">
+                            <span class="nav-line-2 text-sm font-bold">Cart</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div id="root" class="w-full overflow-x-hidden bg-white">
+        <div class="max-w-amazon mx-auto px-4 bg-white font-amazon">
+            <!-- Breadcrumb -->
+            <nav class="pt-4 pb-2 text-xs text-amazon-text-light">
+                <span contenteditable="true" data-field="breadcrumb" class="amazon-editable cursor-pointer hover:text-amazon-red hover:underline">Health & Health</span>
+            </nav>
+
+            <!-- Product Layout - Exact Amazon Structure -->
+            <div class="grid grid-cols-amazon-product gap-6 mt-4 items-start">
+                <!-- Left Column - Product Images -->
+                <div class="relative w-[538px]">
+                    <div class="flex gap-4">
+                        <!-- Thumbnail Column -->
+                        <div class="flex flex-col gap-1.5 w-10">
+                            <div class="w-10 h-10 border border-amazon-border rounded bg-white flex items-center justify-center cursor-pointer amazon-thumbnail-active group">
+                                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRjBGMEYwIi8+Cjx0ZXh0IHg9IjMwIiB5PSIzMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzk5OSIgZm9udC1zaXplPSI4Ij4xPC90ZXh0Pgo8L3N2Zz4=" alt="Thumbnail 1" class="w-full h-full object-cover">
+                                <input type="file" accept="image/*" class="hidden">
+                                <button class="amazon-upload-btn group-hover:opacity-100" onclick="this.previousElementSibling.click()">Upload</button>
+                            </div>
+                            <div class="w-10 h-10 border border-amazon-border rounded bg-white flex items-center justify-center cursor-pointer group">
+                                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRjBGMEYwIi8+Cjx0ZXh0IHg9IjMwIiB5PSIzMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzk5OSIgZm9udC1zaXplPSI4Ij4yPC90ZXh0Pgo8L3N2Zz4=" alt="Thumbnail 2" class="w-full h-full object-cover">
+                                <input type="file" accept="image/*" class="hidden">
+                                <button class="amazon-upload-btn group-hover:opacity-100" onclick="this.previousElementSibling.click()">Upload</button>
+                            </div>
+                            <div class="w-10 h-10 border border-amazon-border rounded bg-white flex items-center justify-center cursor-pointer group">
+                                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRjBGMEYwIi8+Cjx0ZXh0IHg9IjMwIiB5PSIzMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzk5OSIgZm9udC1zaXplPSI4Ij4zPC90ZXh0Pgo8L3N2Zz4=" alt="Thumbnail 3" class="w-full h-full object-cover">
+                                <input type="file" accept="image/*" class="hidden">
+                                <button class="amazon-upload-btn group-hover:opacity-100" onclick="this.previousElementSibling.click()">Upload</button>
+                            </div>
+                            <div class="w-10 h-10 border border-amazon-border rounded bg-white flex items-center justify-center cursor-pointer group">
+                                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRjBGMEYwIi8+Cjx0ZXh0IHg9IjMwIiB5PSIzMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzk5OSIgZm9udC1zaXplPSI4Ij4+PC90ZXh0Pgo8L3N2Zz4=" alt="Add Image" class="w-full h-full object-cover">
+                                <input type="file" accept="image/*" class="hidden">
+                                <button class="amazon-upload-btn group-hover:opacity-100" onclick="this.previousElementSibling.click()">Upload</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Main Image -->
+                        <div class="flex-1 relative border border-amazon-border rounded-lg overflow-hidden bg-white w-[482px] h-[482px] group">
+                            <img id="hero-image" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDQwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjRjBGMEYwIi8+Cjx0ZXh0IHg9IjIwMCIgeT0iMjAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTk5IiBmb250LXNpemU9IjE2Ij5DbGljayB0byB1cGxvYWQgaW1hZ2U8L3RleHQ+Cjwvc3ZnPg==" alt="Product Image" class="w-full h-full object-cover cursor-pointer">
+                            <input type="file" id="hero-upload" accept="image/*" class="hidden">
+                            <button class="amazon-upload-btn group-hover:opacity-100" onclick="document.getElementById('hero-upload').click()">Upload Image</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column - Product Info -->
+                <div class="max-w-[362px] pl-6">
+                    <!-- Product Title -->
+                    <h1 contenteditable="true" data-field="title" class="amazon-editable text-2xl font-normal leading-7 mb-3 text-amazon-text">Fertility and Family Building | Treatment coverage and personalized support to fulfill your dreams of family</h1>
+                    
+                    <!-- Brand -->
+                    <div class="mb-3">
+                        <span class="text-sm text-amazon-text-light">by </span>
+                        <span contenteditable="true" data-field="brand" class="amazon-editable text-sm text-amazon-text hover:text-amazon-red hover:underline cursor-pointer font-medium">Progyny</span>
+                    </div>
+                    
+                    <!-- Price Section -->
+                    <div class="mt-3 mb-5 flex items-baseline gap-1">
+                        <span class="text-sm text-amazon-text-light">Price with coverage:</span>
+                        <span class="amazon-editable text-3xl text-amazon-red font-normal" contenteditable="true" data-field="price">$0</span>
+                        <span class="amazon-editable text-lg text-amazon-text-light align-super" contenteditable="true" data-field="price-unit">99</span>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mt-4 mb-6">
+                        <h3 class="text-base font-bold mb-3 text-amazon-text">Product Description</h3>
+                        <div contenteditable="true" data-field="description" class="amazon-editable text-sm leading-5 text-amazon-text space-y-3">
+                            <p>Progyny can help to make your family dreams come true through a fully supported journey.</p>
+                            <p>We connect you with the nation's top fertility specialists to receive the quality care you deserve and partner you with a Progyny Care Advocate, our fertility experts trained to support all paths to parenthood including adoption and surrogacy, for unlimited emotional support and care navigation.</p>
+                        </div>
+                    </div>
+
+                    <!-- CTA Button -->
+                    <div class="mt-6">
+                        <button class="amazon-cta-btn text-base py-3" contenteditable="true" data-field="cta-text">Check Coverage</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- What's Included Section -->
+            <div class="mt-8 pt-6 border-t border-amazon-border-light">
+                <h2 class="text-xl font-bold mb-5 text-amazon-text">What's included</h2>
+                <div class="space-y-0 mb-6" data-list="included">
+                    <div class="group flex items-start py-3 border-b border-gray-100 hover:bg-amazon-bg rounded px-2 -mx-2">
+                        <div class="flex-1">
+                            <div class="font-semibold text-sm text-amazon-text mb-1">
+                                <span contenteditable="true" class="amazon-editable">Support for all paths to parenthood</span>
+                            </div>
+                            <div class="text-sm text-amazon-text-light leading-5">
+                                <span contenteditable="true" class="amazon-editable">Fertility and family building coverage (IVF, IUI, egg freezing, and more) from top fertility specialists, support for adoption and surrogacy, and preconception coaching & trying to conceive resources</span>
+                            </div>
+                        </div>
+                        <button class="amazon-remove-btn group-hover:flex ml-4">×</button>
+                    </div>
+                    <div class="group flex items-start py-3 border-b border-gray-100 hover:bg-amazon-bg rounded px-2 -mx-2">
+                        <div class="flex-1">
+                            <div class="font-semibold text-sm text-amazon-text mb-1">
+                                <span contenteditable="true" class="amazon-editable">Personalized support</span>
+                            </div>
+                            <div class="text-sm text-amazon-text-light leading-5">
+                                <span contenteditable="true" class="amazon-editable">1:1 Unlimited phone and messaging support from a dedicated Progyny Care Advocate to help coordinate care and provide emotional support</span>
+                            </div>
+                        </div>
+                        <button class="amazon-remove-btn group-hover:flex ml-4">×</button>
+                    </div>
+                    <div class="group flex items-start py-3 border-b border-gray-100 hover:bg-amazon-bg rounded px-2 -mx-2">
+                        <div class="flex-1">
+                            <div class="font-semibold text-sm text-amazon-text mb-1">
+                                <span contenteditable="true" class="amazon-editable">Benefits navigation</span>
+                            </div>
+                            <div class="text-sm text-amazon-text-light leading-5">
+                                <span contenteditable="true" class="amazon-editable">Guidance at each stage to understand covered benefits and available financial coverage for treatment and medication</span>
+                            </div>
+                        </div>
+                        <button class="amazon-remove-btn group-hover:flex ml-4">×</button>
+                    </div>
+                    <div class="group flex items-start py-3 border-b border-gray-100 hover:bg-amazon-bg rounded px-2 -mx-2">
+                        <div class="flex-1">
+                            <div class="font-semibold text-sm text-amazon-text mb-1">
+                                <span contenteditable="true" class="amazon-editable">Top fertility specialists</span>
+                            </div>
+                            <div class="text-sm text-amazon-text-light leading-5">
+                                <span contenteditable="true" class="amazon-editable">Access to the nation's top Reproductive Endocrinologists and Reproductive Urologists to create the best care plan</span>
+                            </div>
+                        </div>
+                        <button class="amazon-remove-btn group-hover:flex ml-4">×</button>
+                    </div>
+                    <div class="group flex items-start py-3 border-b border-gray-100 hover:bg-amazon-bg rounded px-2 -mx-2">
+                        <div class="flex-1">
+                            <div class="font-semibold text-sm text-amazon-text mb-1">
+                                <span contenteditable="true" class="amazon-editable">Progyny app</span>
+                            </div>
+                            <div class="text-sm text-amazon-text-light leading-5">
+                                <span contenteditable="true" class="amazon-editable">Centralized portal to review personalized benefit details, communicate with your PCA, and explore on-demand educational resources for your specific journey</span>
+                            </div>
+                        </div>
+                        <button class="amazon-remove-btn group-hover:flex ml-4">×</button>
+                    </div>
+                </div>
+                <button class="amazon-add-btn" data-target="included">+ Add Item</button>
+            </div>
+
+            <!-- Is this program for me? Section -->
+            <div class="mt-6 pt-6 border-t border-amazon-border-light">
+                <h2 class="text-amazon-2xl font-bold mb-4 text-amazon-text leading-7">Is this program for me?</h2>
+                <div class="grid grid-cols-1 gap-0 mb-4" data-list="program-details">
+                    <div class="group grid grid-cols-amazon-included gap-3 items-start py-2 pr-4 relative hover:bg-amazon-bg rounded">
+                        <span contenteditable="true" class="amazon-editable text-amazon-base leading-5 font-semibold text-amazon-text">✓ Fertility growth</span>
+                        <span contenteditable="true" class="amazon-editable text-amazon-base leading-5 text-amazon-text-light">Looking to grow your family through fertility treatments</span>
+                        <button class="amazon-remove-btn group-hover:flex">×</button>
+                    </div>
+                    <div class="group grid grid-cols-amazon-included gap-3 items-start py-2 pr-4 relative hover:bg-amazon-bg rounded">
+                        <span contenteditable="true" class="amazon-editable text-amazon-base leading-5 font-semibold text-amazon-text">✓ Fertility preservation</span>
+                        <span contenteditable="true" class="amazon-editable text-amazon-base leading-5 text-amazon-text-light">Interested in preserving fertility for future family building</span>
+                        <button class="amazon-remove-btn group-hover:flex">×</button>
+                    </div>
+                    <div class="group grid grid-cols-amazon-included gap-3 items-start py-2 pr-4 relative hover:bg-amazon-bg rounded">
+                        <span contenteditable="true" class="amazon-editable text-amazon-base leading-5 font-semibold text-amazon-text">✓ Fertility navigation</span>
+                        <span contenteditable="true" class="amazon-editable text-amazon-base leading-5 text-amazon-text-light">Need guidance navigating fertility benefits and treatment options</span>
+                        <button class="amazon-remove-btn group-hover:flex">×</button>
+                    </div>
+                </div>
+                <button class="amazon-add-btn" data-target="program-details">+ Add Item</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Control Panel -->
+    <div class="control-panel fixed bottom-4 right-4 bg-white border border-gray-300 rounded-lg shadow-lg p-4 space-y-2">
+        <button onclick="saveData()" class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Save</button>
+        <button onclick="loadData()" class="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Load</button>
+        <button onclick="exportPDF()" class="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Export PDF</button>
+        <button onclick="exportHTML()" class="w-full bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">Export HTML</button>
+    </div>
+</div>
+
+    <script src="script.js"></script>
+    
+    <!-- Electron App - No Service Worker needed -->
+</body>
+</html>

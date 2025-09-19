@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Amazon-specific components */
+@layer components {
+  .amazon-header-gradient {
+    background: linear-gradient(to bottom, #37475a, #2f3947);
+  }
+
+  .amazon-cta-btn {
+    @apply bg-amazon-orange text-amazon-text border border-amazon-orange rounded-lg px-5 py-2.5 text-sm font-medium cursor-pointer transition-all duration-200;
+  }
+
+  .amazon-cta-btn:hover {
+    @apply bg-amazon-orange-dark border-amazon-orange-dark;
+  }
+
+  .amazon-upload-btn {
+    @apply absolute bottom-2 right-2 bg-black bg-opacity-70 text-white border-none px-3 py-1.5 rounded text-xs cursor-pointer opacity-0 transition-opacity duration-200;
+  }
+
+  .amazon-upload-btn:hover {
+    @apply bg-opacity-80;
+  }
+
+  .amazon-add-btn {
+    @apply bg-gray-100 text-amazon-text border border-gray-300 rounded-lg px-4 py-2 text-sm cursor-pointer transition-all duration-200;
+  }
+
+  .amazon-add-btn:hover {
+    @apply bg-gray-200 border-gray-400;
+  }
+
+  .amazon-remove-btn {
+    @apply hidden absolute top-1 right-1 bg-red-500 text-white border-none w-5 h-5 rounded-full text-xs cursor-pointer items-center justify-center;
+  }
+
+  .amazon-remove-btn:hover {
+    @apply bg-red-600;
+  }
+
+  .group:hover .amazon-remove-btn {
+    @apply flex;
+  }
+
+  .group:hover .amazon-upload-btn {
+    @apply opacity-100;
+  }
+}
+
+/* Custom utilities */
+@layer utilities {
+  .max-w-amazon {
+    max-width: 1464px;
+  }
+
+  .font-amazon {
+    font-family: "Amazon Ember", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  .h-15 {
+    height: 3.75rem;
+  }
+
+  .grid-cols-amazon-product {
+    grid-template-columns: 538px 1fr;
+  }
+
+  .grid-cols-amazon-included {
+    grid-template-columns: 80px 1fr auto;
+  }
+}
+
+
+
+
+
+

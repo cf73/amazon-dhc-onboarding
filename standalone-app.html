@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon DHC Onboarding Tool</title>
+    <style>
+        /* Amazon-specific styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Amazon Ember", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background-color: #ffffff;
+            color: #0F1111;
+            line-height: 1.4;
+        }
+
+        .amazon-header {
+            background: linear-gradient(to bottom, #37475a, #2f3947);
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            color: white;
+        }
+
+        .amazon-logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: 24px;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 600px;
+            display: flex;
+            height: 40px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0 12px;
+            border: 2px solid #FF9900;
+            border-right: none;
+            border-radius: 4px 0 0 4px;
+            font-size: 14px;
+        }
+
+        .search-btn {
+            background: #FF9900;
+            border: 2px solid #FF9900;
+            border-radius: 0 4px 4px 0;
+            padding: 0 12px;
+            cursor: pointer;
+        }
+
+        .main-container {
+            max-width: 1464px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        .breadcrumb {
+            padding: 16px 0 8px;
+            font-size: 12px;
+            color: #565959;
+        }
+
+        .product-layout {
+            display: grid;
+            grid-template-columns: 538px 1fr;
+            gap: 24px;
+            margin-top: 16px;
+            align-items: start;
+        }
+
+        .product-images {
+            position: relative;
+        }
+
+        .main-image {
+            width: 482px;
+            height: 482px;
+            border: 1px solid #D5D9D9;
+            border-radius: 4px;
+            object-fit: cover;
+            background: #f8f8f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 18px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .upload-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            cursor: pointer;
+        }
+
+        .main-image:hover .upload-overlay {
+            opacity: 1;
+        }
+
+        .thumbnails {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .thumbnail {
+            width: 64px;
+            height: 64px;
+            border: 1px solid #D5D9D9;
+            border-radius: 4px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .thumbnail.active {
+            border-color: #FF9900;
+            border-width: 2px;
+        }
+
+        .add-thumbnail {
+            width: 64px;
+            height: 64px;
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #999;
+            font-size: 24px;
+        }
+
+        .add-thumbnail:hover {
+            border-color: #FF9900;
+            color: #FF9900;
+        }
+
+        .product-info {
+            max-width: 362px;
+            padding-left: 24px;
+        }
+
+        .product-title {
+            font-size: 24px;
+            font-weight: normal;
+            line-height: 1.3;
+            margin-bottom: 12px;
+            border: none;
+            background: transparent;
+            width: 100%;
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .product-brand {
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #565959;
+        }
+
+        .brand-link {
+            color: #0F1111;
+            font-weight: 500;
+            text-decoration: none;
+            border: none;
+            background: transparent;
+        }
+
+        .brand-link:hover {
+            color: #B12704;
+            text-decoration: underline;
+        }
+
+        .price-section {
+            margin: 12px 0 20px;
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+        }
+
+        .price-label {
+            font-size: 14px;
+            color: #565959;
+        }
+
+        .price-main {
+            font-size: 32px;
+            color: #B12704;
+            font-weight: normal;
+            border: none;
+            background: transparent;
+            width: 80px;
+        }
+
+        .price-unit {
+            font-size: 18px;
+            color: #565959;
+            vertical-align: super;
+            border: none;
+            background: transparent;
+            width: 30px;
+        }
+
+        .description-section {
+            margin: 16px 0 24px;
+        }
+
+        .description-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .description-text {
+            font-size: 14px;
+            line-height: 1.4;
+            border: 1px solid #ddd;
+            padding: 12px;
+            border-radius: 4px;
+            width: 100%;
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .cta-button {
+            background: #FF9900;
+            color: #0F1111;
+            border: 1px solid #FF9900;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            background: transparent;
+            width: 200px;
+            text-align: center;
+        }
+
+        .cta-button {
+            background: #FF9900;
+            color: #0F1111;
+            border: 1px solid #FF9900;
+        }
+
+        .cta-button:hover {
+            background: #E47911;
+            border-color: #E47911;
+        }
+
+        .content-section {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #D5D9D9;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .included-item {
+            display: flex;
+            align-items: start;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+            position: relative;
+        }
+
+        .included-item:hover .remove-btn {
+            display: block;
+        }
+
+        .item-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+            border: none;
+            background: transparent;
+            width: 100%;
+        }
+
+        .item-description {
+            font-size: 14px;
+            color: #565959;
+            line-height: 1.4;
+            border: none;
+            background: transparent;
+            width: 100%;
+            resize: vertical;
+            min-height: 40px;
+        }
+
+        .add-item-btn {
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 16px;
+        }
+
+        .add-item-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .remove-btn {
+            display: none;
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .control-panel {
+            position: fixed;
+            top: 50%;
+            right: 16px;
+            transform: translateY(-50%);
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 1000;
+            width: 200px;
+        }
+
+        .control-btn {
+            width: 100%;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .control-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .control-btn.primary {
+            background: #FF9900;
+            color: white;
+            border-color: #FF9900;
+        }
+
+        .control-btn.primary:hover {
+            background: #E47911;
+        }
+
+        .notification {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            background: #4CAF50;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 4px;
+            z-index: 2000;
+            display: none;
+        }
+
+        .notification.error {
+            background: #f44336;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Drag and drop styles */
+        .drag-over {
+            border-color: #FF9900 !important;
+            background-color: #fff8f0 !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Amazon Header -->
+    <header class="amazon-header">
+        <div class="amazon-logo">amazon<span style="font-size: 12px;">.us</span></div>
+        <div class="search-bar">
+            <input type="text" class="search-input" placeholder="Search Amazon">
+            <button class="search-btn">🔍</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb">
+            <input type="text" id="breadcrumb" value="Health & Health" style="border: none; background: transparent; color: #565959;">
+        </nav>
+
+        <!-- Product Section -->
+        <div class="product-layout">
+            <!-- Product Images -->
+            <div class="product-images">
+                <div class="main-image" id="mainImage">
+                    <span>Product Image</span>
+                    <div class="upload-overlay">
+                        <span>Click or drag image here</span>
+                    </div>
+                </div>
+                
+                <div class="thumbnails" id="thumbnails">
+                    <div class="add-thumbnail" onclick="uploadThumbnail()">+</div>
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="product-info">
+                <textarea class="product-title" id="productTitle" placeholder="Product title">Fertility and Family Building | Treatment coverage and personalized support to fulfill your dreams of family</textarea>
+                
+                <div class="product-brand">
+                    by <input type="text" class="brand-link" id="brandName" value="Progyny">
+                </div>
+                
+                <div class="price-section">
+                    <span class="price-label">Price with coverage:</span>
+                    <input type="text" class="price-main" id="priceMain" value="$0">
+                    <input type="text" class="price-unit" id="priceUnit" value="99">
+                </div>
+
+                <div class="description-section">
+                    <h3 class="description-title">Product Description</h3>
+                    <textarea class="description-text" id="productDescription" placeholder="Product description">Progyny can help to make your family dreams come true through a fully supported journey. We connect you with the nation's top fertility specialists to receive the quality care you deserve and partner you with a Progyny Care Advocate, our fertility experts trained to support all paths to parenthood including adoption and surrogacy, for unlimited emotional support and care navigation.</textarea>
+                </div>
+
+                <input type="text" class="cta-button" id="ctaButton" value="Check Coverage">
+            </div>
+        </div>
+
+        <!-- What's Included Section -->
+        <div class="content-section">
+            <h2 class="section-title">What's included</h2>
+            <div id="includedItems">
+                <div class="included-item">
+                    <div style="flex: 1;">
+                        <input type="text" class="item-title" value="Support for all paths to parenthood">
+                        <textarea class="item-description">Fertility and family building coverage (IVF, IUI, egg freezing, and more) from top fertility specialists, support for adoption and surrogacy, and preconception coaching & trying to conceive resources</textarea>
+                    </div>
+                    <button class="remove-btn" onclick="removeItem(this)">×</button>
+                </div>
+                <div class="included-item">
+                    <div style="flex: 1;">
+                        <input type="text" class="item-title" value="Personalized support">
+                        <textarea class="item-description">1:1 Unlimited phone and messaging support from a dedicated Progyny Care Advocate to help coordinate care and provide emotional support</textarea>
+                    </div>
+                    <button class="remove-btn" onclick="removeItem(this)">×</button>
+                </div>
+            </div>
+            <button class="add-item-btn" onclick="addIncludedItem()">+ Add Item</button>
+        </div>
+    </main>
+
+    <!-- Control Panel -->
+    <div class="control-panel">
+        <h3 style="margin-bottom: 16px; font-size: 16px;">Amazon Onboarding</h3>
+        <button class="control-btn primary" onclick="saveProject()">💾 Save Project</button>
+        <button class="control-btn" onclick="loadProject()">📁 Load Project</button>
+        <button class="control-btn" onclick="exportPDF()">📄 Export PDF</button>
+        <button class="control-btn" onclick="exportHTML()">🌐 Export HTML</button>
+        <div style="margin-top: 16px; font-size: 12px; color: #666;">
+            <div>✅ Auto-save enabled</div>
+            <div>📁 Files saved locally</div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <!-- Hidden file inputs -->
+    <input type="file" id="mainImageInput" accept="image/*" style="display: none;" onchange="handleMainImageUpload(event)">
+    <input type="file" id="thumbnailInput" accept="image/*" style="display: none;" onchange="handleThumbnailUpload(event)">
+
+    <script>
+        // Application state
+        let projectData = {
+            title: '',
+            brand: '',
+            price: '',
+            priceUnit: '',
+            description: '',
+            ctaText: '',
+            breadcrumb: '',
+            mainImage: null,
+            thumbnails: [],
+            includedItems: []
+        };
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProjectData();
+            setupEventListeners();
+            setupDragAndDrop();
+        });
+
+        function setupEventListeners() {
+            // Auto-save on input changes
+            document.addEventListener('input', debounce(saveProjectData, 1000));
+            
+            // Main image click
+            document.getElementById('mainImage').addEventListener('click', function() {
+                document.getElementById('mainImageInput').click();
+            });
+        }
+
+        function setupDragAndDrop() {
+            const mainImage = document.getElementById('mainImage');
+            
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                mainImage.addEventListener(eventName, preventDefaults, false);
+            });
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                mainImage.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                mainImage.addEventListener(eventName, unhighlight, false);
+            });
+
+            mainImage.addEventListener('drop', handleDrop, false);
+        }
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        function highlight(e) {
+            e.target.closest('.main-image').classList.add('drag-over');
+        }
+
+        function unhighlight(e) {
+            e.target.closest('.main-image').classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            
+            if (files.length > 0) {
+                uploadMainImage(files[0]);
+            }
+        }
+
+        async function uploadMainImage(file) {
+            try {
+                const formData = new FormData();
+                formData.append('image', file);
+                
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    projectData.mainImage = result.url;
+                    updateMainImageDisplay();
+                    saveProjectData();
+                    showNotification('Image uploaded successfully!');
+                } else {
+                    showNotification('Upload failed: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showNotification('Upload failed: ' + error.message, 'error');
+            }
+        }
+
+        function handleMainImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                uploadMainImage(file);
+            }
+        }
+
+        function updateMainImageDisplay() {
+            const mainImage = document.getElementById('mainImage');
+            if (projectData.mainImage) {
+                mainImage.innerHTML = `
+                    <img src="${projectData.mainImage}" alt="Product Image">
+                    <div class="upload-overlay">
+                        <span>Click or drag to change image</span>
+                    </div>
+                `;
+            }
+        }
+
+        function uploadThumbnail() {
+            document.getElementById('thumbnailInput').click();
+        }
+
+        async function handleThumbnailUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                try {
+                    const formData = new FormData();
+                    formData.append('image', file);
+                    
+                    const response = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        projectData.thumbnails.push(result.url);
+                        updateThumbnailsDisplay();
+                        saveProjectData();
+                        showNotification('Thumbnail uploaded successfully!');
+                    }
+                } catch (error) {
+                    showNotification('Upload failed: ' + error.message, 'error');
+                }
+            }
+        }
+
+        function updateThumbnailsDisplay() {
+            const container = document.getElementById('thumbnails');
+            const addBtn = container.querySelector('.add-thumbnail');
+            
+            // Clear existing thumbnails
+            container.innerHTML = '';
+            
+            // Add thumbnails
+            projectData.thumbnails.forEach((url, index) => {
+                const thumb = document.createElement('img');
+                thumb.className = 'thumbnail';
+                thumb.src = url;
+                thumb.onclick = () => selectThumbnail(index);
+                container.appendChild(thumb);
+            });
+            
+            // Re-add the add button
+            container.appendChild(addBtn);
+        }
+
+        function selectThumbnail(index) {
+            // Update main image with selected thumbnail
+            projectData.mainImage = projectData.thumbnails[index];
+            updateMainImageDisplay();
+            
+            // Update thumbnail active state
+            document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
+                thumb.classList.toggle('active', i === index);
+            });
+        }
+
+        function addIncludedItem() {
+            const container = document.getElementById('includedItems');
+            const newItem = document.createElement('div');
+            newItem.className = 'included-item';
+            newItem.innerHTML = `
+                <div style="flex: 1;">
+                    <input type="text" class="item-title" value="New Item" placeholder="Item title">
+                    <textarea class="item-description" placeholder="Item description">Description of the new item</textarea>
+                </div>
+                <button class="remove-btn" onclick="removeItem(this)">×</button>
+            `;
+            container.appendChild(newItem);
+            
+            // Focus on the new item title
+            newItem.querySelector('.item-title').focus();
+            newItem.querySelector('.item-title').select();
+        }
+
+        function removeItem(button) {
+            button.parentElement.remove();
+            saveProjectData();
+        }
+
+        function collectProjectData() {
+            projectData.title = document.getElementById('productTitle').value;
+            projectData.brand = document.getElementById('brandName').value;
+            projectData.price = document.getElementById('priceMain').value;
+            projectData.priceUnit = document.getElementById('priceUnit').value;
+            projectData.description = document.getElementById('productDescription').value;
+            projectData.ctaText = document.getElementById('ctaButton').value;
+            projectData.breadcrumb = document.getElementById('breadcrumb').value;
+            
+            // Collect included items
+            projectData.includedItems = [];
+            document.querySelectorAll('#includedItems .included-item').forEach(item => {
+                const title = item.querySelector('.item-title').value;
+                const description = item.querySelector('.item-description').value;
+                projectData.includedItems.push({ title, description });
+            });
+        }
+
+        async function saveProjectData() {
+            collectProjectData();
+            
+            try {
+                const response = await fetch('/api/save-data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(projectData)
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    console.log('Project auto-saved');
+                }
+            } catch (error) {
+                console.error('Auto-save failed:', error);
+            }
+        }
+
+        async function loadProjectData() {
+            try {
+                const response = await fetch('/api/load-data');
+                const data = await response.json();
+                
+                if (data) {
+                    projectData = data;
+                    
+                    // Update UI with loaded data
+                    document.getElementById('productTitle').value = projectData.title || '';
+                    document.getElementById('brandName').value = projectData.brand || '';
+                    document.getElementById('priceMain').value = projectData.price || '';
+                    document.getElementById('priceUnit').value = projectData.priceUnit || '';
+                    document.getElementById('productDescription').value = projectData.description || '';
+                    document.getElementById('ctaButton').value = projectData.ctaText || '';
+                    document.getElementById('breadcrumb').value = projectData.breadcrumb || '';
+                    
+                    // Update images
+                    if (projectData.mainImage) {
+                        updateMainImageDisplay();
+                    }
+                    if (projectData.thumbnails && projectData.thumbnails.length > 0) {
+                        updateThumbnailsDisplay();
+                    }
+                    
+                    // Update included items
+                    if (projectData.includedItems && projectData.includedItems.length > 0) {
+                        const container = document.getElementById('includedItems');
+                        container.innerHTML = '';
+                        
+                        projectData.includedItems.forEach(item => {
+                            const itemDiv = document.createElement('div');
+                            itemDiv.className = 'included-item';
+                            itemDiv.innerHTML = `
+                                <div style="flex: 1;">
+                                    <input type="text" class="item-title" value="${item.title}">
+                                    <textarea class="item-description">${item.description}</textarea>
+                                </div>
+                                <button class="remove-btn" onclick="removeItem(this)">×</button>
+                            `;
+                            container.appendChild(itemDiv);
+                        });
+                    }
+                    
+                    console.log('Project loaded successfully');
+                }
+            } catch (error) {
+                console.error('Failed to load project:', error);
+            }
+        }
+
+        function saveProject() {
+            collectProjectData();
+            const dataStr = JSON.stringify(projectData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'amazon-onboarding-project.json';
+            a.click();
+            
+            URL.revokeObjectURL(url);
+            showNotification('Project saved successfully!');
+        }
+
+        function loadProject() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    try {
+                        const contents = await file.text();
+                        projectData = JSON.parse(contents);
+                        await loadProjectData();
+                        showNotification('Project loaded successfully!');
+                    } catch (error) {
+                        showNotification('Failed to load project: ' + error.message, 'error');
+                    }
+                }
+            };
+            input.click();
+        }
+
+        function exportPDF() {
+            // Hide control panel for export
+            document.querySelector('.control-panel').style.display = 'none';
+            
+            // Use browser's print functionality
+            window.print();
+            
+            // Restore control panel
+            setTimeout(() => {
+                document.querySelector('.control-panel').style.display = 'block';
+            }, 1000);
+        }
+
+        function exportHTML() {
+            collectProjectData();
+            
+            // Generate clean HTML
+            const cleanHTML = generateCleanHTML();
+            const blob = new Blob([cleanHTML], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'amazon-onboarding-export.html';
+            a.click();
+            
+            URL.revokeObjectURL(url);
+            showNotification('HTML exported successfully!');
+        }
+
+        function generateCleanHTML() {
+            return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${projectData.title}</title>
+    <style>
+        body { font-family: "Amazon Ember", Arial, sans-serif; margin: 0; padding: 0; }
+        .amazon-header { background: linear-gradient(to bottom, #37475a, #2f3947); height: 60px; display: flex; align-items: center; padding: 0 16px; color: white; }
+        .amazon-logo { font-size: 24px; font-weight: bold; }
+        .main-container { max-width: 1464px; margin: 0 auto; padding: 0 16px; }
+        .breadcrumb { padding: 16px 0 8px; font-size: 12px; color: #565959; }
+        .product-layout { display: grid; grid-template-columns: 538px 1fr; gap: 24px; margin-top: 16px; }
+        .main-image { width: 482px; height: 482px; border: 1px solid #D5D9D9; border-radius: 4px; }
+        .product-title { font-size: 24px; font-weight: normal; line-height: 1.3; margin-bottom: 12px; }
+        .product-brand { margin-bottom: 12px; font-size: 14px; color: #565959; }
+        .price-section { margin: 12px 0 20px; display: flex; align-items: baseline; gap: 4px; }
+        .price-main { font-size: 32px; color: #B12704; font-weight: normal; }
+        .price-unit { font-size: 18px; color: #565959; vertical-align: super; }
+        .description-text { font-size: 14px; line-height: 1.4; margin: 16px 0; }
+        .cta-button { background: #FF9900; color: #0F1111; border: 1px solid #FF9900; border-radius: 8px; padding: 12px 24px; font-size: 16px; }
+        .content-section { margin-top: 32px; padding-top: 24px; border-top: 1px solid #D5D9D9; }
+        .section-title { font-size: 20px; font-weight: bold; margin-bottom: 20px; }
+        .included-item { padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+        .item-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+        .item-description { font-size: 14px; color: #565959; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <header class="amazon-header">
+        <div class="amazon-logo">amazon<span style="font-size: 12px;">.us</span></div>
+    </header>
+    
+    <main class="main-container">
+        <nav class="breadcrumb">${projectData.breadcrumb}</nav>
+        
+        <div class="product-layout">
+            <div class="product-images">
+                ${projectData.mainImage ? `<img src="${projectData.mainImage}" alt="Product Image" class="main-image">` : '<div class="main-image" style="background: #f8f8f8; display: flex; align-items: center; justify-content: center; color: #999;">Product Image</div>'}
+            </div>
+            
+            <div class="product-info">
+                <h1 class="product-title">${projectData.title}</h1>
+                <div class="product-brand">by <strong>${projectData.brand}</strong></div>
+                <div class="price-section">
+                    <span>Price with coverage:</span>
+                    <span class="price-main">${projectData.price}</span>
+                    <span class="price-unit">${projectData.priceUnit}</span>
+                </div>
+                <div class="description-text">${projectData.description}</div>
+                <button class="cta-button">${projectData.ctaText}</button>
+            </div>
+        </div>
+        
+        <div class="content-section">
+            <h2 class="section-title">What's included</h2>
+            ${projectData.includedItems.map(item => `
+                <div class="included-item">
+                    <div class="item-title">${item.title}</div>
+                    <div class="item-description">${item.description}</div>
+                </div>
+            `).join('')}
+        </div>
+    </main>
+</body>
+</html>`;
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+    </script>
+</body>
+</html>
+
+

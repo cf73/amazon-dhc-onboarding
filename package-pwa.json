@@ -1,0 +1,29 @@
+{
+  "name": "amazon-dhc-onboarding-pwa",
+  "version": "2.0.0",
+  "description": "Amazon DHC Onboarding Tool - Progressive Web App",
+  "main": "onboarding.html",
+  "scripts": {
+    "build-css": "npx tailwindcss -i ./styles-tailwind.css -o ./styles-compiled.css",
+    "build-css-watch": "npx tailwindcss -i ./styles-tailwind.css -o ./styles-compiled.css --watch",
+    "serve": "npx http-server . -p 3000 -c-1",
+    "dev": "npm run build-css && npm run serve"
+  },
+  "keywords": [
+    "amazon",
+    "onboarding",
+    "pwa",
+    "health",
+    "progressive-web-app"
+  ],
+  "author": "Amazon DHC Team",
+  "license": "MIT",
+  "devDependencies": {
+    "tailwindcss": "^3.4.0",
+    "http-server": "^14.1.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
+

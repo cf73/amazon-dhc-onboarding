@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Amazon styles */
+.amazon-upload-btn-small {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.amazon-upload-btn-small:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.thumbnail.active img {
+    border-color: #FF9900 !important;
+    box-shadow: 0 0 0 2px #FF9900;
+}
+
+.add-thumbnail:hover {
+    background-color: #F7F8F8;
+}
+
+.bg-amazon-footer-dark {
+    background-color: #232F3E;
+}
+
+/* Custom Amazon-specific components */
+@layer components {
+  .amazon-header-gradient {
+    background: linear-gradient(to bottom, #37475a, #2f3947);
+    background-color: #37475a;
+  }
+  
+  .amazon-logo::before {
+    content: "amazon";
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: -1px;
+  }
+  
+  .amazon-thumbnail-active {
+    @apply border-2 border-amazon-orange shadow-[0_0_0_1px_#FF9900];
+  }
+  
+  .amazon-upload-btn {
+    @apply absolute top-2 right-2 bg-black bg-opacity-70 text-white border-none px-2.5 py-1.5 rounded text-amazon-xs cursor-pointer opacity-0 transition-opacity duration-300;
+  }
+  
+  .amazon-upload-btn:hover {
+    @apply opacity-100;
+  }
+  
+  .amazon-editable {
+    @apply border border-transparent p-0.5 rounded transition-all duration-200;
+  }
+  
+  .amazon-editable:hover {
+    @apply bg-amazon-bg;
+  }
+  
+  .amazon-editable:focus {
+    @apply border-amazon-orange outline-none bg-white;
+  }
+  
+  .amazon-remove-btn {
+    @apply absolute top-1 right-1 bg-amazon-error text-white border-none rounded-full w-5 h-5 text-amazon-xs cursor-pointer hidden items-center justify-center;
+  }
+  
+  .amazon-add-btn {
+    @apply bg-gray-100 text-amazon-text border border-amazon-border rounded px-3 py-2 text-amazon-sm cursor-pointer transition-colors duration-200;
+  }
+  
+  .amazon-add-btn:hover {
+    @apply bg-gray-200;
+  }
+  
+  .amazon-cta-btn {
+    @apply bg-amazon-orange text-amazon-text border border-amazon-orange rounded-lg px-4 py-2.5 text-amazon-base font-normal cursor-pointer w-full text-center transition-colors duration-150 leading-5 min-h-[40px] flex items-center justify-center;
+  }
+  
+  .amazon-cta-btn:hover {
+    @apply bg-amazon-orange-dark border-amazon-orange-dark;
+  }
+  
+  .amazon-cta-btn:focus {
+    @apply outline-2 outline-amazon-orange outline-offset-2;
+  }
+}
+
+/* Custom utilities */
+@layer utilities {
+  .group:hover .amazon-remove-btn {
+    @apply flex;
+  }
+  
+  .group:hover .amazon-upload-btn {
+    @apply opacity-100;
+  }
+}
