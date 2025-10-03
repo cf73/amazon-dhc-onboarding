@@ -301,27 +301,24 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
         }
         
         .buy-box {
-          flex: 0 1 350px;
+          flex: 1 1 350px;
           min-width: 280px;
-          max-width: 350px;
         }
         
-        @media (max-width: 1200px) {
+        @media (min-width: 1200px) {
+          .buy-box {
+            flex: 0 1 350px;
+            max-width: 350px;
+          }
+        }
+        
+        @media (max-width: 1199px) and (min-width: 900px) {
           .product-image-column {
             flex: 0 1 280px;
           }
           .buy-box {
-            flex: 0 1 300px;
+            flex: 1 1 300px;
             min-width: 260px;
-          }
-        }
-        
-        @media (max-width: 1100px) {
-          .buy-box {
-            flex: 1 1 100%;
-            width: 100%;
-            max-width: 100%;
-            min-width: 100%;
           }
         }
       `}</style>
