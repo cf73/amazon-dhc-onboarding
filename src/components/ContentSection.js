@@ -490,7 +490,7 @@ const SortableBullet = ({ bullet, bulletIndex, sections, onUpdateSection, jadeCh
               color: '#0F1111',
               lineHeight: '20px'
             }}
-            placeholder="40,000+ 5-star reviews from Fay clients"
+            placeholder="40,000+ 5-star reviews from Company Name clients"
           />
         </div>
         {/* Action Icons - Right Side */}
@@ -793,7 +793,7 @@ const ContentSection = ({ sections, onUpdateSection }) => {
                   lineHeight: '21px',
                   textAlign: 'start'
                 }}
-                placeholder="Fay Nutrition Counseling Program"
+                placeholder="Company Name Nutrition Counseling Program"
               />
             </div>
             
@@ -817,7 +817,7 @@ const ContentSection = ({ sections, onUpdateSection }) => {
                   textAlign: 'left',
                   minHeight: '30px'
                 }}
-                placeholder="Your journey to better health starts with Fay"
+                placeholder="Your journey to better health starts with Company Name"
                 rows={1}
               />
             </h3>
@@ -840,7 +840,7 @@ const ContentSection = ({ sections, onUpdateSection }) => {
                   lineHeight: '21px',
                   minHeight: '42px'
                 }}
-                placeholder="Fay is a leader in the health and wellness space and has helped over 100,000 people improve their health through expert nutrition care."
+                placeholder="Company Name is a leader in the health and wellness space and has helped over 100,000 people improve their health through expert nutrition care."
                 rows={2}
               />
             </div>
@@ -1027,7 +1027,7 @@ const ContentSection = ({ sections, onUpdateSection }) => {
                 {
                   id: '2',
                   title: 'Affordable care',
-                  description: 'Seeing a Registered Dietitian can cost up to $150 per session without insurance, but when you book through Fay, you\'re likely to pay closer to $10. In fact, for most people, sessions are free with insurance.',
+                  description: 'Seeing a Registered Dietitian can cost up to $150 per session without insurance, but when you book through Company Name, you\'re likely to pay closer to $10. In fact, for most people, sessions are free with insurance.',
                   image: null
                 }
               ];
@@ -1082,7 +1082,7 @@ const ContentSection = ({ sections, onUpdateSection }) => {
         </button>
       </div>
 
-      {/* About Fay Section */}
+      {/* About Section */}
       <div className="pt-12" style={{ paddingLeft: '60px', paddingRight: '60px' }}>
         <div className="flex items-start gap-3 mb-6">
           {/* Editable Logo */}

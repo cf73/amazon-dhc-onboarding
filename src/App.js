@@ -98,11 +98,11 @@ function App() {
         }
       ],
       fromBrand: {
-        category: 'Fay Nutrition Counseling Program',
-        title: 'Your journey to better health starts with Fay',
-        description: 'Fay is a leader in the health and wellness space and has helped over 100,000 people improve their health through expert nutrition care.',
+        category: 'Company Name Nutrition Counseling Program',
+        title: 'Your journey to better health starts with Company Name',
+        description: 'Company Name is a leader in the health and wellness space and has helped over 100,000 people improve their health through expert nutrition care.',
         bulletPoints: [
-          { id: '1', text: '40,000+ 5-star reviews from Fay clients' },
+          { id: '1', text: '40,000+ 5-star reviews from Company Name clients' },
           { id: '2', text: 'Personalized 1:1 care from a registered dietitian' },
           { id: '3', text: 'Covered by insurance for 90% of Americans' }
         ],
