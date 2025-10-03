@@ -281,6 +281,19 @@ function App() {
       }
       return;
     }
+
+    // Handle whatToExpect items
+    if (activeId.startsWith('expect-')) {
+      const expectItems = [...(projectData.sections.whatToExpect || [])];
+      const oldIndex = expectItems.findIndex(item => `expect-${item.id}` === activeId);
+      const newIndex = expectItems.findIndex(item => `expect-${item.id}` === overId);
+      
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const newExpect = arrayMove(expectItems, oldIndex, newIndex);
+        updateSection('whatToExpect', newExpect);
+      }
+      return;
+    }
   };
 
   // Export functions

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { useDropzone } from 'react-dropzone';
 import { PlusIcon, XMarkIcon, ChevronDownIcon, PhotoIcon } from '@heroicons/react/24/outline';
 import { v4 as uuidv4 } from 'uuid';
 import quoteMarks from '../assets/quotemarks.png';
@@ -110,6 +111,186 @@ const SortableTestimonial = ({ item, updateItem, removeItem, textareaRefs }) => 
             style={{ fontFamily: 'Amazon Ember', fontSize: '14px', fontWeight: '400', lineHeight: '21px', color: '#565959' }}
             placeholder="Tanya F., Florida"
           />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Sortable What to Expect Item
+const SortableExpectItem = ({ item, index, sections, onUpdateSection }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: `expect-${item.id}` });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  const backgroundColor = index % 2 === 0 ? '#F5F7FD' : '#FAFAFA';
+
+  const { getRootProps: getImageRootProps, getInputProps: getImageInputProps } = useDropzone({
+    accept: { 'image/*': [] },
+    multiple: false,
+    onDrop: (acceptedFiles) => {
+      const file = acceptedFiles[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        const updatedItems = sections.whatToExpect.map(expectItem =>
+          expectItem.id === item.id ? { ...expectItem, image: reader.result } : expectItem
+        );
+        onUpdateSection('whatToExpect', updatedItems);
+      };
+      reader.readAsDataURL(file);
+    },
+  });
+
+  return (
+    <div ref={setNodeRef} style={{ ...style, marginBottom: '20px' }} className="group relative">
+      <div
+        className="transition-all duration-200"
+        style={{
+          backgroundColor: isDragging ? 'rgba(255, 255, 255, 0.67)' : backgroundColor,
+          backdropFilter: isDragging ? 'blur(10px)' : 'none',
+          boxShadow: isDragging ? '0 2px 12px rgba(0,0,0,0.1)' : 'none',
+          border: isDragging ? '1px solid rgba(0, 0, 0, 0.05)' : 'none',
+          marginLeft: '60px',
+          marginRight: '60px',
+          borderRadius: '24px',
+        }}
+        onMouseEnter={(e) => {
+          if (!isDragging) {
+            e.currentTarget.style.backdropFilter = 'blur(5px)';
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!isDragging) {
+            e.currentTarget.style.backdropFilter = 'none';
+          }
+        }}
+      >
+        <div 
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            paddingLeft: '112px',
+            paddingRight: '112px',
+            paddingTop: '30px',
+            paddingBottom: '30px',
+            gap: '100px',
+          }}
+        >
+        {/* Left Column - Text Content */}
+        <div style={{ flex: 1 }}>
+          <input
+            type="text"
+            value={item.title}
+            onChange={(e) => {
+              const updatedItems = sections.whatToExpect.map(expectItem =>
+                expectItem.id === item.id ? { ...expectItem, title: e.target.value } : expectItem
+              );
+              onUpdateSection('whatToExpect', updatedItems);
+            }}
+            className="w-full bg-transparent border-none outline-none mb-4"
+            style={{ fontFamily: 'Amazon Ember', fontSize: '18px', fontWeight: '700', color: '#0F1111', lineHeight: '24px' }}
+            placeholder="Lorem ipsum dolor"
+          />
+          <textarea
+            value={item.description}
+            onChange={(e) => {
+              const updatedItems = sections.whatToExpect.map(expectItem =>
+                expectItem.id === item.id ? { ...expectItem, description: e.target.value } : expectItem
+              );
+              onUpdateSection('whatToExpect', updatedItems);
+            }}
+            onInput={(e) => {
+              e.target.style.height = 'auto';
+              e.target.style.height = e.target.scrollHeight + 'px';
+            }}
+            className="w-full bg-transparent border-none outline-none resize-none"
+            style={{ fontFamily: 'Amazon Ember', fontSize: '15px', fontWeight: '400', color: '#0F1111', lineHeight: '20px' }}
+            placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+            rows={3}
+          />
+        </div>
+
+        {/* Right Column - Image */}
+        <div className="relative" style={{ flexShrink: 0 }}>
+          {item.image ? (
+            <div className="relative">
+              <img
+                src={item.image}
+                alt={item.title}
+                style={{ width: '350px', height: '250px', objectFit: 'cover', borderRadius: '20px' }}
+              />
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const updatedItems = sections.whatToExpect.map(expectItem =>
+                    expectItem.id === item.id ? { ...expectItem, image: null } : expectItem
+                  );
+                  onUpdateSection('whatToExpect', updatedItems);
+                }}
+                className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <XMarkIcon className="w-4 h-4 text-gray-600" />
+              </button>
+            </div>
+          ) : (
+            <div
+              {...getImageRootProps()}
+              className="cursor-pointer"
+              style={{ width: '350px', height: '250px', border: '2px dashed #D5D9D9', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#F7F7F7' }}
+            >
+              <input {...getImageInputProps()} />
+              <div className="text-center">
+                <PhotoIcon className="w-12 h-12 mx-auto mb-2 text-gray-400" />
+                <p className="text-sm text-gray-500">Drop image or click to upload</p>
+                <p className="text-xs text-gray-400 mt-1">350x250px recommended</p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        </div>
+
+        {/* Action Icons - Top Right */}
+        <div className="absolute top-4 right-4 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20">
+          {/* Drag Handle */}
+          <div
+            {...listeners}
+            {...attributes}
+            style={{ cursor: 'grab', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="5" cy="4" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="11" cy="4" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="5" cy="8" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="11" cy="8" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="5" cy="12" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="11" cy="12" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+            </svg>
+          </div>
+          {/* Delete Button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              const updatedItems = sections.whatToExpect.filter(expectItem => expectItem.id !== item.id);
+              onUpdateSection('whatToExpect', updatedItems);
+            }}
+            style={{ cursor: 'pointer', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', padding: 0 }}
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="8" cy="8" r="7" fill="rgba(220, 38, 38, 0.1)" />
+              <path d="M10.5 5.5L5.5 10.5M5.5 5.5L10.5 10.5" stroke="rgba(220, 38, 38, 0.8)" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </button>
         </div>
       </div>
     </div>
@@ -555,6 +736,71 @@ const ContentSection = ({ sections, onUpdateSection }) => {
               />
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* What to Expect Section */}
+      <div className="pt-12">
+        <h2 style={{ fontFamily: 'Amazon Ember', fontSize: '18px', fontWeight: '700', color: '#0F1111', marginBottom: '24px', paddingLeft: '60px', paddingRight: '60px' }}>
+          What to expect
+        </h2>
+        <SortableContext
+          items={(sections.whatToExpect || []).map(item => `expect-${item.id}`)}
+          strategy={verticalListSortingStrategy}
+        >
+          {(sections.whatToExpect || [
+            {
+              id: '1',
+              title: 'Customized plan',
+              description: 'Registered Dietitians (RDs) meet with you 1-on-1 to design a plan that is customized to your unique needs. This could include meal planning, journaling, or a number of other methods that are clinically-proven to work.',
+              image: null
+            },
+            {
+              id: '2',
+              title: 'Affordable care',
+              description: 'Seeing a Registered Dietitian can cost up to $150 per session without insurance, but when you book through Fay, you\'re likely to pay closer to $10. In fact, for most people, sessions are free with insurance.',
+              image: null
+            }
+          ]).map((item, index) => (
+            <SortableExpectItem
+              key={`expect-${item.id}`}
+              item={item}
+              index={index}
+              sections={sections}
+              onUpdateSection={onUpdateSection}
+            />
+          ))}
+        </SortableContext>
+        <div style={{ paddingLeft: '60px', paddingRight: '60px', paddingTop: '24px' }}>
+          <button
+            onClick={() => {
+              const currentItems = sections.whatToExpect || [
+                {
+                  id: '1',
+                  title: 'Customized plan',
+                  description: 'Registered Dietitians (RDs) meet with you 1-on-1 to design a plan that is customized to your unique needs. This could include meal planning, journaling, or a number of other methods that are clinically-proven to work.',
+                  image: null
+                },
+                {
+                  id: '2',
+                  title: 'Affordable care',
+                  description: 'Seeing a Registered Dietitian can cost up to $150 per session without insurance, but when you book through Fay, you\'re likely to pay closer to $10. In fact, for most people, sessions are free with insurance.',
+                  image: null
+                }
+              ];
+              const newItem = {
+                id: Date.now().toString(),
+                title: 'New section',
+                description: 'Description for the new section goes here.',
+                image: null
+              };
+              onUpdateSection('whatToExpect', [...currentItems, newItem]);
+            }}
+            className="flex items-center gap-2 text-amazon-orange hover:text-amazon-orange-dark font-medium text-sm"
+          >
+            <PlusIcon className="w-4 h-4" />
+            Add Section
+          </button>
         </div>
       </div>
 
