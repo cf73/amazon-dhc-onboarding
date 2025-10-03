@@ -273,6 +273,31 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
   return (
     <div style={{ paddingLeft: '60px', paddingRight: '60px', paddingTop: '32px' }}>
       <style>{`
+        .product-layout {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: flex-start;
+          gap: 48px;
+        }
+        
+        .product-image-column {
+          flex-shrink: 1;
+          min-width: 280px;
+          max-width: 352px;
+          width: 352px;
+        }
+        
+        .product-content-column {
+          flex: 1;
+          min-width: 0;
+        }
+        
+        .buy-box {
+          flex-shrink: 0;
+          width: 350px;
+          min-width: 350px;
+        }
+        
         @media (max-width: 1145px) {
           .buy-box {
             width: 100% !important;
@@ -281,9 +306,9 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
           }
         }
       `}</style>
-      <div className="flex flex-wrap items-start" style={{ gap: '48px' }}>
+      <div className="product-layout">
       {/* Left Column - Product Images */}
-        <div className="flex-shrink-0" style={{ minWidth: '280px', maxWidth: '352px', width: '352px' }}>
+        <div className="product-image-column">
         {/* Main Product Image */}
         <div className="main-image-container mb-4">
             {data.images?.hero ? (
@@ -445,7 +470,7 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
         )}
 
       {/* Center Column - Main Content */}
-        <div className="flex-1" style={{ minWidth: '0' }}>
+        <div className="product-content-column">
         {/* Product Title */}
         <textarea
           value={data.title}
@@ -570,7 +595,7 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
       </div>
 
       {/* Right Column - Price & CTA */}
-        <div className="flex-shrink-0 bg-white rounded buy-box" style={{ border: '1px solid #D5D9D9', padding: '18px 20px', width: '350px', minWidth: '350px' }}>
+        <div className="buy-box bg-white rounded" style={{ border: '1px solid #D5D9D9', padding: '18px 20px' }}>
         {/* Price Section */}
           <div style={{ marginBottom: '16px' }}>
             <div style={{ fontSize: '14px', color: '#0F1111', marginBottom: '4px', fontWeight: '700' }}>Price with coverage:</div>
