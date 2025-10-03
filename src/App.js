@@ -438,6 +438,14 @@ function App() {
         .xray-mode textarea:not([readonly]):focus {
           outline: 2px solid #8E44AD !important;
         }
+        .xray-mode .price-text-dropdown > div {
+          outline: 2px dashed #8E44AD !important;
+          outline-offset: 2px;
+          color: #8E44AD !important;
+        }
+        .xray-mode .price-text-dropdown > div span {
+          color: #8E44AD !important;
+        }
       `}</style>
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         {/* Amazon Header */}

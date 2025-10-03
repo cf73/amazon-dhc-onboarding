@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { PlusIcon, PhotoIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, PhotoIcon, XMarkIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
@@ -273,11 +273,11 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
   return (
     <div style={{ paddingLeft: '60px', paddingRight: '60px', paddingTop: '32px' }}>
       <div className="flex items-start" style={{ minWidth: '798px', gap: '48px' }}>
-        {/* Left Column - Product Images */}
+      {/* Left Column - Product Images */}
         <div className="flex-shrink-0 w-[352px]">
         {/* Main Product Image */}
         <div className="main-image-container mb-4">
-          {data.images?.hero ? (
+            {data.images?.hero ? (
             <div className="relative group" style={{ width: '352px', height: '470px' }}>
               <img
                 src={data.images.hero}
@@ -299,7 +299,7 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
               style={{ width: '352px', height: '470px', borderColor: '#D5D9D9' }}
             >
               <input {...getHeroInputProps()} />
-              <div className="text-center">
+                <div className="text-center">
                 <PhotoIcon className="w-12 h-12 mx-auto mb-3" style={{ color: '#8B96A5' }} />
                 <p style={{ fontFamily: 'Amazon Ember', fontSize: '14px', fontWeight: '400', color: '#565959', marginBottom: '4px' }}>
                   Drop image or click to upload
@@ -310,9 +310,9 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
                 <p style={{ fontFamily: 'Amazon Ember', fontSize: '11px', fontWeight: '400', color: '#8B96A5', marginTop: '8px' }}>
                   Use 2x resolution (704x940px) for high DPI screens
                 </p>
+                </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
 
         {/* Thumbnail Images */}
@@ -352,7 +352,7 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
             <PlusIcon className="w-6 h-6" style={{ color: '#8B96A5' }} />
           </div>
         </div>
-        </div>
+      </div>
 
         {/* Thumbnail Upload Modal */}
         {showThumbnailModal && (
@@ -434,7 +434,7 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
           </div>
         )}
 
-        {/* Center Column - Main Content */}
+      {/* Center Column - Main Content */}
         <div className="flex-1">
         {/* Product Title */}
         <textarea
@@ -517,11 +517,11 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
               strategy={verticalListSortingStrategy}
             >
               <div style={{ display: 'flex', flexDirection: 'column', paddingTop: '12px' }}>
-                {(data.sections?.programFor || [
-                  { id: '1', text: "You're looking to grow your family through assisted reproductive technology (fertility treatment), adoption, or surrogacy" },
-                  { id: '2', text: "You're thinking ahead for fertility preservation (sperm and egg freezing)" },
-                  { id: '3', text: "You're looking for relief from the financial, emotional, and administrative burden of navigating fertility treatment" }
-                ]).map((item, index) => (
+            {(data.sections?.programFor || [
+              { id: '1', text: "You're looking to grow your family through assisted reproductive technology (fertility treatment), adoption, or surrogacy" },
+              { id: '2', text: "You're thinking ahead for fertility preservation (sperm and egg freezing)" },
+              { id: '3', text: "You're looking for relief from the financial, emotional, and administrative burden of navigating fertility treatment" }
+            ]).map((item, index) => (
                   <SortableProgramForItem
                     key={`programFor-${item.id}`}
                     item={item}
@@ -529,83 +529,122 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
                     data={data}
                     onUpdate={onUpdate}
                   />
-                ))}
-              </div>
+            ))}
+          </div>
             </SortableContext>
-            <button
-              onClick={() => {
-                const currentProgramFor = data.sections?.programFor || [
-                  { id: '1', text: "You're looking to grow your family through assisted reproductive technology (fertility treatment), adoption, or surrogacy" },
-                  { id: '2', text: "You're thinking ahead for fertility preservation (sperm and egg freezing)" },
-                  { id: '3', text: "You're looking for relief from the financial, emotional, and administrative burden of navigating fertility treatment" }
-                ];
-                const newItem = {
-                  id: Date.now().toString(),
-                  text: 'New criteria for program eligibility'
-                };
-                const updatedProgramFor = [...currentProgramFor, newItem];
-                onUpdate({ sections: { ...data.sections, programFor: updatedProgramFor } });
-              }}
+          <button
+            onClick={() => {
+              const currentProgramFor = data.sections?.programFor || [
+                { id: '1', text: "You're looking to grow your family through assisted reproductive technology (fertility treatment), adoption, or surrogacy" },
+                { id: '2', text: "You're thinking ahead for fertility preservation (sperm and egg freezing)" },
+                { id: '3', text: "You're looking for relief from the financial, emotional, and administrative burden of navigating fertility treatment" }
+              ];
+              const newItem = {
+                id: Date.now().toString(),
+                text: 'New criteria for program eligibility'
+              };
+              const updatedProgramFor = [...currentProgramFor, newItem];
+              onUpdate({ sections: { ...data.sections, programFor: updatedProgramFor } });
+            }}
               className="flex items-center gap-2 text-amazon-orange hover:text-amazon-orange-dark"
               style={{ fontSize: '13px', fontWeight: '400', marginTop: '16px' }}
-            >
-              <PlusIcon className="w-4 h-4" />
-              Add Criteria
-            </button>
+          >
+            <PlusIcon className="w-4 h-4" />
+            Add Criteria
+          </button>
           </div>
           <div style={{ fontSize: '14px', color: '#0F1111', lineHeight: '20px' }}>
             Check your coverage to see if you're covered by your insurance or employer.
           </div>
         </div>
-        </div>
+      </div>
 
-        {/* Right Column - Price & CTA */}
+      {/* Right Column - Price & CTA */}
         <div className="flex-shrink-0 w-[350px] bg-white rounded" style={{ border: '1px solid #D5D9D9', padding: '18px 20px' }}>
-          {/* Price Section */}
+        {/* Price Section */}
           <div style={{ marginBottom: '16px' }}>
             <div style={{ fontSize: '14px', color: '#0F1111', marginBottom: '4px', fontWeight: '700' }}>Price with coverage:</div>
             <div className="flex items-baseline" style={{ marginBottom: '2px' }}>
               <span style={{ fontSize: '13px', color: '#0F1111', lineHeight: '1', marginRight: '0', position: 'relative', top: '-8px', fontWeight: '400' }}>$</span>
-              <input
-                type="text"
-                value={data.price.replace('$', '')}
-                onChange={(e) => handleInputChange('price', '$' + e.target.value)}
+            <input
+              type="text"
+              value={data.price.replace('$', '')}
+              onChange={(e) => handleInputChange('price', '$' + e.target.value)}
                 className="bg-transparent border-none outline-none"
                 style={{ fontSize: '28px', color: '#0F1111', width: '20px', lineHeight: '1', fontWeight: '400', padding: '0', marginLeft: '0' }}
-              />
-              <input
-                type="text"
-                value={data.priceUnit}
-                onChange={(e) => handleInputChange('priceUnit', e.target.value)}
+            />
+            <input
+              type="text"
+              value={data.priceUnit}
+              onChange={(e) => handleInputChange('priceUnit', e.target.value)}
                 className="bg-transparent border-none outline-none"
                 style={{ fontSize: '13px', color: '#0F1111', width: '25px', lineHeight: '1', padding: '0', marginLeft: '0', position: 'relative', top: '-8px', fontWeight: '400' }}
-              />
-            </div>
+            />
+          </div>
             <div 
-              className="relative"
+              className="relative price-text-dropdown group"
               style={{ fontSize: '14px', color: '#565959', lineHeight: '20px' }}
             >
               <div 
-                className="cursor-pointer transition-colors"
-                onMouseEnter={() => setShowPriceTextDropdown(true)}
-                onMouseLeave={() => setShowPriceTextDropdown(false)}
+                className="cursor-pointer transition-all duration-200 relative"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowPriceTextDropdown(!showPriceTextDropdown);
+                }}
                 style={{ 
                   fontSize: '14px', 
                   color: showPriceTextDropdown ? '#0F1111' : '#565959', 
                   lineHeight: '20px',
-                  fontWeight: showPriceTextDropdown ? '500' : '400'
+                  fontWeight: showPriceTextDropdown ? '500' : '400',
+                  paddingRight: '24px',
+                  borderRadius: '4px',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(142, 68, 173, 0.08)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
                 }}
               >
-                {priceText}
+                <span>{priceText}</span>
+                <div
+                  className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center"
+                  style={{
+                    right: '4px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: '18px',
+                    height: '18px',
+                    borderRadius: '4px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+                    backdropFilter: 'blur(8px)',
+                    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+                    pointerEvents: 'none'
+                  }}
+                >
+                  <ChevronDownIcon 
+                    className="transition-transform duration-200"
+                    style={{ 
+                      width: '12px', 
+                      height: '12px',
+                      transform: showPriceTextDropdown ? 'rotate(180deg)' : 'rotate(0deg)',
+                      color: '#8E44AD'
+                    }} 
+                  />
+                </div>
               </div>
               
               {/* Dropdown Menu */}
               {showPriceTextDropdown && (
-                <div 
-                  className="absolute z-50 transition-all duration-200"
-                  onMouseEnter={() => setShowPriceTextDropdown(true)}
-                  onMouseLeave={() => setShowPriceTextDropdown(false)}
-                  style={{
+                <>
+                  {/* Backdrop to close on outside click */}
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setShowPriceTextDropdown(false)}
+                  />
+                  <div 
+                    className="absolute z-50 transition-all duration-200"
+                    style={{
                     backgroundColor: 'rgba(255, 255, 255, 0.33)',
                     backdropFilter: 'blur(10px)',
                     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
@@ -705,31 +744,32 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
                     for 1:1 support. Fees apply for additional medical services.
                   </div>
                 </div>
+                </>
               )}
-            </div>
           </div>
+        </div>
 
-          {/* CTA Button */}
+        {/* CTA Button */}
           <div style={{ marginBottom: '8px' }}>
             <button className="w-full rounded" style={{ backgroundColor: '#FFD814', border: '1px solid #FCD200', padding: '9px 0', boxShadow: '0 2px 5px 0 rgba(213,217,217,0.5)' }}>
-              <input
-                type="text"
-                value={data.ctaText}
-                onChange={(e) => handleInputChange('ctaText', e.target.value)}
-                className="w-full bg-transparent border-none outline-none text-center"
-                style={{ fontSize: '13px', color: '#0F1111', fontWeight: '400', padding: '0' }}
-              />
-            </button>
-          </div>
-
-          {/* Learn More Link */}
-          <div>
             <input
               type="text"
-              defaultValue="Learn more about coverage and pricing"
+              value={data.ctaText}
+              onChange={(e) => handleInputChange('ctaText', e.target.value)}
+                className="w-full bg-transparent border-none outline-none text-center"
+                style={{ fontSize: '13px', color: '#0F1111', fontWeight: '400', padding: '0' }}
+            />
+          </button>
+        </div>
+
+        {/* Learn More Link */}
+          <div>
+          <input
+            type="text"
+            defaultValue="Learn more about coverage and pricing"
               className="w-full bg-transparent border-none outline-none cursor-pointer hover:underline hover:text-red-700"
               style={{ fontSize: '14px', color: '#007185', padding: '0', lineHeight: '20px', textAlign: 'left' }}
-            />
+          />
           </div>
         </div>
       </div>

@@ -11,20 +11,32 @@ import {
 
 const ControlPanel = ({ onSave, onLoad, onExportPDF, onExportHTML, isLoading, xrayMode, onToggleXray }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showXrayTooltip, setShowXrayTooltip] = useState(false);
 
   return (
     <>
       {/* X-Ray Mode Toggle */}
       <motion.div
         onClick={onToggleXray}
+        onMouseEnter={() => setShowXrayTooltip(true)}
+        onMouseLeave={() => setShowXrayTooltip(false)}
         whileHover={{ 
           scale: 1.03,
           y: -2,
         }}
+        animate={{
+          right: isExpanded ? 432 : 224,
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 300,
+          damping: 30,
+          mass: 1
+        }}
         className="fixed z-50 cursor-pointer"
         style={{
           bottom: '32px',
-          right: '224px',
+          width: '48px',
         }}
       >
         <div
@@ -55,6 +67,28 @@ const ControlPanel = ({ onSave, onLoad, onExportPDF, onExportHTML, isLoading, xr
             }} 
           />
         </div>
+
+        {/* Tooltip */}
+        {showXrayTooltip && (
+          <motion.div
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="absolute"
+            style={{
+              left: '50%',
+              bottom: '60px',
+              transform: 'translateX(-50%)',
+              whiteSpace: 'nowrap',
+              color: '#8E44AD',
+              fontSize: '13px',
+              fontWeight: '700',
+              pointerEvents: 'none',
+              letterSpacing: '0.3px'
+            }}
+          >
+            X-Ray Mode
+          </motion.div>
+        )}
       </motion.div>
 
       <div 
