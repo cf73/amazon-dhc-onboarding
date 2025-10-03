@@ -1,5 +1,5 @@
 import React from 'react';
-import amazonLogo from '../assets/amazonlogo1.png';
+import footerLogo from '../assets/footerlogo.png';
 
 const Footer = ({ data, onUpdate }) => {
   const handleBackToTop = () => {
@@ -30,7 +30,7 @@ const Footer = ({ data, onUpdate }) => {
 
       {/* Navigation Links */}
       <div 
-        className="flex justify-center gap-12"
+        className="flex justify-center flex-wrap"
         style={{ 
           backgroundColor: '#232F3E',
           fontFamily: 'Amazon Ember',
@@ -39,65 +39,14 @@ const Footer = ({ data, onUpdate }) => {
           lineHeight: '20px',
           color: 'white',
           paddingTop: '38px',
-          paddingBottom: '38px'
+          paddingBottom: '38px',
+          gap: '48px'
         }}
       >
-        <input
-          type="text"
-          value={data?.link1 || 'Your Account'}
-          onChange={(e) => onUpdate({ ...data, link1: e.target.value })}
-          className="bg-transparent border-none outline-none text-white text-center"
-          style={{ 
-            fontFamily: 'Amazon Ember',
-            fontSize: '14px',
-            fontWeight: '400',
-            lineHeight: '20px',
-            width: '120px'
-          }}
-          placeholder="Link 1"
-        />
-        <input
-          type="text"
-          value={data?.link2 || 'Your Orders'}
-          onChange={(e) => onUpdate({ ...data, link2: e.target.value })}
-          className="bg-transparent border-none outline-none text-white text-center"
-          style={{ 
-            fontFamily: 'Amazon Ember',
-            fontSize: '14px',
-            fontWeight: '400',
-            lineHeight: '20px',
-            width: '120px'
-          }}
-          placeholder="Link 2"
-        />
-        <input
-          type="text"
-          value={data?.link3 || 'Help'}
-          onChange={(e) => onUpdate({ ...data, link3: e.target.value })}
-          className="bg-transparent border-none outline-none text-white text-center"
-          style={{ 
-            fontFamily: 'Amazon Ember',
-            fontSize: '14px',
-            fontWeight: '400',
-            lineHeight: '20px',
-            width: '120px'
-          }}
-          placeholder="Link 3"
-        />
-        <input
-          type="text"
-          value={data?.link4 || 'Sign Out'}
-          onChange={(e) => onUpdate({ ...data, link4: e.target.value })}
-          className="bg-transparent border-none outline-none text-white text-center"
-          style={{ 
-            fontFamily: 'Amazon Ember',
-            fontSize: '14px',
-            fontWeight: '400',
-            lineHeight: '20px',
-            width: '120px'
-          }}
-          placeholder="Link 4"
-        />
+        <span>Your Account</span>
+        <span>Your Orders</span>
+        <span>Help</span>
+        <span>Sign Out</span>
       </div>
 
       {/* Amazon Logo Section */}
@@ -110,7 +59,7 @@ const Footer = ({ data, onUpdate }) => {
         }}
       >
         <img 
-          src={amazonLogo} 
+          src={footerLogo} 
           alt="Amazon" 
           className="mx-auto"
           style={{ display: 'inline-block' }}
@@ -128,71 +77,20 @@ const Footer = ({ data, onUpdate }) => {
         }}
       >
         <div 
-          className="flex justify-center gap-6 flex-wrap"
+          className="flex justify-center flex-wrap"
           style={{ 
             fontFamily: 'Amazon Ember',
             fontSize: '12px',
             fontWeight: '400',
             lineHeight: '16px',
-            marginBottom: '10px'
+            marginBottom: '10px',
+            gap: '24px'
           }}
         >
-          <input
-            type="text"
-            value={data?.legalLink1 || 'Privacy Notice'}
-            onChange={(e) => onUpdate({ ...data, legalLink1: e.target.value })}
-            className="bg-transparent border-none outline-none text-white text-center"
-            style={{ 
-              fontFamily: 'Amazon Ember',
-              fontSize: '12px',
-              fontWeight: '400',
-              lineHeight: '16px',
-              width: '100px'
-            }}
-            placeholder="Legal Link 1"
-          />
-          <input
-            type="text"
-            value={data?.legalLink2 || 'Conditions of Use'}
-            onChange={(e) => onUpdate({ ...data, legalLink2: e.target.value })}
-            className="bg-transparent border-none outline-none text-white text-center"
-            style={{ 
-              fontFamily: 'Amazon Ember',
-              fontSize: '12px',
-              fontWeight: '400',
-              lineHeight: '16px',
-              width: '130px'
-            }}
-            placeholder="Legal Link 2"
-          />
-          <input
-            type="text"
-            value={data?.legalLink3 || 'Interest-Based Ads'}
-            onChange={(e) => onUpdate({ ...data, legalLink3: e.target.value })}
-            className="bg-transparent border-none outline-none text-white text-center"
-            style={{ 
-              fontFamily: 'Amazon Ember',
-              fontSize: '12px',
-              fontWeight: '400',
-              lineHeight: '16px',
-              width: '140px'
-            }}
-            placeholder="Legal Link 3"
-          />
-          <input
-            type="text"
-            value={data?.legalLink4 || 'Consumer Health Data Privacy Disclosure'}
-            onChange={(e) => onUpdate({ ...data, legalLink4: e.target.value })}
-            className="bg-transparent border-none outline-none text-white text-center"
-            style={{ 
-              fontFamily: 'Amazon Ember',
-              fontSize: '12px',
-              fontWeight: '400',
-              lineHeight: '16px',
-              width: '280px'
-            }}
-            placeholder="Legal Link 4"
-          />
+          <span>Privacy Notice</span>
+          <span>Conditions of Use</span>
+          <span>Interest-Based Ads</span>
+          <span>Consumer Health Data Privacy Disclosure</span>
         </div>
         
         <div style={{ 
@@ -202,21 +100,7 @@ const Footer = ({ data, onUpdate }) => {
           lineHeight: '16px',
           color: '#DDD'
         }}>
-          <input
-            type="text"
-            value={data?.copyright || '© 1996-2025, Amazon.com, Inc. or its affiliates'}
-            onChange={(e) => onUpdate({ ...data, copyright: e.target.value })}
-            className="bg-transparent border-none outline-none text-center"
-            style={{ 
-              fontFamily: 'Amazon Ember',
-              fontSize: '12px',
-              fontWeight: '400',
-              lineHeight: '16px',
-              color: '#DDD',
-              width: '400px'
-            }}
-            placeholder="© Copyright text"
-          />
+          © 1996-2025, Amazon.com, Inc. or its affiliates
         </div>
       </div>
     </footer>

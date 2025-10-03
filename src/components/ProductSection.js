@@ -320,6 +320,12 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
         
         @media (min-width: 768px) { /* md */
           .product-image-column {
+            width: 260px;
+          }
+        }
+        
+        @media (min-width: 1024px) { /* lg */
+          .product-image-column {
             width: 280px;
           }
         }
@@ -344,6 +350,15 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
         }
         
         @media (min-width: 1024px) { /* lg - Buy box becomes 3rd column */
+          .buy-box {
+            flex: 0 0 300px;
+            width: 300px;
+            min-width: 300px;
+            max-width: 300px;
+          }
+        }
+        
+        @media (min-width: 1280px) { /* xl - Buy box grows to full size */
           .buy-box {
             flex: 0 0 350px;
             width: 350px;
@@ -547,13 +562,17 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
           <textarea
             ref={descriptionRef}
             value={data.description}
-            onChange={(e) => handleInputChange('description', e.target.value)}
+            onChange={(e) => {
+              handleInputChange('description', e.target.value);
+              e.target.style.height = 'auto';
+              e.target.style.height = e.target.scrollHeight + 'px';
+            }}
             onInput={(e) => {
               e.target.style.height = 'auto';
               e.target.style.height = e.target.scrollHeight + 'px';
             }}
-            className="w-full bg-transparent border border-gray-200 rounded p-3 outline-none focus:border-amazon-orange resize-none overflow-hidden"
-            style={{ fontSize: '15px', color: '#0F1111', lineHeight: '20px', fontWeight: '400', minHeight: '80px' }}
+            className="w-full bg-transparent border-none outline-none resize-none overflow-hidden"
+            style={{ fontSize: '15px', color: '#0F1111', lineHeight: '20px', fontWeight: '400', minHeight: '80px', padding: '0' }}
           />
         </div>
 
