@@ -115,8 +115,8 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
         <textarea
           value={data.title}
           onChange={(e) => handleInputChange('title', e.target.value)}
-          className="w-full font-normal leading-8 mb-2 text-amazon-text bg-transparent border-none outline-none resize-none overflow-hidden"
-          style={{ minHeight: '2.5rem', fontSize: '28px' }}
+          className="w-full bg-transparent border-none outline-none resize-none overflow-hidden"
+          style={{ minHeight: '2.5rem', fontSize: '24px', fontWeight: '400', lineHeight: '32px', color: '#0F1111', marginBottom: '4px' }}
           onInput={(e) => {
             e.target.style.height = 'auto';
             e.target.style.height = e.target.scrollHeight + 'px';
@@ -124,36 +124,36 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
         />
         
         {/* Brand */}
-        <div className="mb-5">
-          <span className="text-sm text-amazon-text-light">by </span>
+        <div style={{ marginBottom: '24px' }}>
+          <span style={{ fontSize: '14px', color: '#565959', fontWeight: '400' }}>by </span>
           <input
             type="text"
             value={data.brand}
             onChange={(e) => handleInputChange('brand', e.target.value)}
-            className="text-sm hover:text-amazon-red hover:underline cursor-pointer bg-transparent border-none outline-none"
-            style={{ color: '#007185' }}
+            className="hover:text-amazon-red hover:underline cursor-pointer bg-transparent border-none outline-none"
+            style={{ fontSize: '14px', color: '#007185', fontWeight: '400' }}
           />
         </div>
 
         {/* Description */}
-        <div className="mb-6">
-          <h3 className="font-bold mb-3" style={{ fontSize: '16px', color: '#0F1111' }}>Description</h3>
+        <div style={{ marginBottom: '24px' }}>
+          <h3 style={{ fontSize: '16px', color: '#0F1111', fontWeight: '700', marginBottom: '8px' }}>Description</h3>
           <textarea
             value={data.description}
             onChange={(e) => handleInputChange('description', e.target.value)}
-            className="w-full leading-6 bg-transparent border border-gray-200 rounded p-3 outline-none focus:border-amazon-orange resize-none"
-            style={{ fontSize: '14px', color: '#0F1111' }}
+            className="w-full bg-transparent border border-gray-200 rounded p-3 outline-none focus:border-amazon-orange resize-none"
+            style={{ fontSize: '14px', color: '#0F1111', lineHeight: '20px', fontWeight: '400' }}
             rows={4}
           />
         </div>
 
         {/* What's Included Section */}
-        <div className="mb-6">
-          <h3 className="font-bold mb-3" style={{ fontSize: '16px', color: '#0F1111' }}>What's included*</h3>
+        <div style={{ marginBottom: '24px' }}>
+          <h3 style={{ fontSize: '16px', color: '#0F1111', fontWeight: '700', marginBottom: '8px' }}>What's included*</h3>
           <div className="border border-gray-200 rounded mb-3">
             {data.sections?.included?.map((item, index) => (
               <div key={item.id} className="group grid grid-cols-[200px_1fr] border-b border-gray-200 last:border-b-0">
-                <div className="bg-gray-100 p-3 text-sm font-medium text-amazon-text relative">
+                <div className="bg-gray-100 p-3 relative" style={{ fontSize: '14px', fontWeight: '700', color: '#0F1111' }}>
                   <input
                     type="text"
                     value={item.title}
@@ -163,11 +163,12 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
                       );
                       onUpdate({ sections: { ...data.sections, included: updatedIncluded } });
                     }}
-                    className="w-full bg-transparent border-none outline-none font-medium"
+                    className="w-full bg-transparent border-none outline-none"
+                    style={{ fontSize: '14px', fontWeight: '700', color: '#0F1111' }}
                     placeholder="Lorem ipsum dolor"
                   />
                 </div>
-                <div className="p-3 text-sm text-amazon-text relative">
+                <div className="p-3 relative">
                   <textarea
                     value={item.description}
                     onChange={(e) => {
@@ -177,6 +178,7 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
                       onUpdate({ sections: { ...data.sections, included: updatedIncluded } });
                     }}
                     className="w-full bg-transparent border-none outline-none resize-none"
+                    style={{ fontSize: '14px', fontWeight: '400', color: '#0F1111', lineHeight: '20px' }}
                     placeholder="Lorem ipsum dolor sit amet consectetur"
                     rows={2}
                   />
@@ -203,7 +205,8 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
               const updatedIncluded = [...(data.sections?.included || []), newItem];
               onUpdate({ sections: { ...data.sections, included: updatedIncluded } });
             }}
-            className="flex items-center gap-2 text-amazon-orange hover:text-amazon-orange-dark font-medium text-sm"
+            className="flex items-center gap-2 text-amazon-orange hover:text-amazon-orange-dark"
+            style={{ fontSize: '13px', fontWeight: '400' }}
           >
             <PlusIcon className="w-4 h-4" />
             Add Feature
@@ -211,8 +214,8 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
         </div>
 
         {/* Is this program for me? Section */}
-        <div className="mb-6">
-          <h3 className="font-bold mb-3" style={{ fontSize: '16px', color: '#0F1111' }}>Is this program for me?</h3>
+        <div style={{ marginBottom: '24px' }}>
+          <h3 style={{ fontSize: '16px', color: '#0F1111', fontWeight: '700', marginBottom: '8px' }}>Is this program for me?</h3>
           <div className="space-y-3 mb-3">
             {(data.sections?.programFor || [
               { id: '1', text: "You're looking to grow your family through assisted reproductive technology (fertility treatment), adoption, or surrogacy" },
@@ -239,7 +242,8 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
                       );
                       onUpdate({ sections: { ...data.sections, programFor: updatedProgramFor } });
                     }}
-                    className="w-full text-sm text-amazon-text bg-transparent border-none outline-none resize-none"
+                    className="w-full bg-transparent border-none outline-none resize-none"
+                    style={{ fontSize: '14px', fontWeight: '400', color: '#0F1111', lineHeight: '20px' }}
                     placeholder="Lorem ipsum dolor sit amet..."
                     rows={2}
                   />
@@ -275,71 +279,72 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
               const updatedProgramFor = [...currentProgramFor, newItem];
               onUpdate({ sections: { ...data.sections, programFor: updatedProgramFor } });
             }}
-            className="flex items-center gap-2 text-amazon-orange hover:text-amazon-orange-dark font-medium text-sm mb-3"
+            className="flex items-center gap-2 text-amazon-orange hover:text-amazon-orange-dark mb-3"
+            style={{ fontSize: '13px', fontWeight: '400' }}
           >
             <PlusIcon className="w-4 h-4" />
             Add Criteria
           </button>
-          <div className="mt-4 text-xs text-amazon-text-light">
+          <div style={{ marginTop: '16px', fontSize: '12px', color: '#565959', lineHeight: '16px' }}>
             Progyny services are available to you if covered by your employer benefits and enrolled in an eligible medical plan. Some programs may have additional requirements based on clinical eligibility.
           </div>
         </div>
         </div>
 
         {/* Right Column - Price & CTA */}
-        <div className="flex-shrink-0 w-[350px] bg-white border rounded-lg p-5" style={{ borderColor: '#D5D9D9', boxShadow: '0 2px 5px rgba(15,17,17,0.15)' }}>
-        {/* Price Section */}
-        <div className="mb-5">
-          <div className="font-bold mb-1" style={{ fontSize: '14px', color: '#0F1111' }}>Price with coverage:</div>
-          <div className="flex items-baseline mb-2" style={{ gap: '2px' }}>
-            <span style={{ fontSize: '21px', color: '#0F1111', lineHeight: '1' }}>$</span>
+        <div className="flex-shrink-0 w-[350px] bg-white rounded" style={{ border: '1px solid #D5D9D9', padding: '18px 20px' }}>
+          {/* Price Section */}
+          <div style={{ marginBottom: '16px' }}>
+            <div style={{ fontSize: '14px', color: '#0F1111', marginBottom: '4px', fontWeight: '700' }}>Price with coverage:</div>
+            <div className="flex items-baseline" style={{ marginBottom: '2px' }}>
+              <span style={{ fontSize: '13px', color: '#0F1111', lineHeight: '1', marginRight: '0', position: 'relative', top: '-8px', fontWeight: '400' }}>$</span>
+              <input
+                type="text"
+                value={data.price.replace('$', '')}
+                onChange={(e) => handleInputChange('price', '$' + e.target.value)}
+                className="bg-transparent border-none outline-none"
+                style={{ fontSize: '28px', color: '#0F1111', width: '20px', lineHeight: '1', fontWeight: '400', padding: '0', marginLeft: '0' }}
+              />
+              <input
+                type="text"
+                value={data.priceUnit}
+                onChange={(e) => handleInputChange('priceUnit', e.target.value)}
+                className="bg-transparent border-none outline-none"
+                style={{ fontSize: '13px', color: '#0F1111', width: '25px', lineHeight: '1', padding: '0', marginLeft: '0', position: 'relative', top: '-8px', fontWeight: '400' }}
+              />
+            </div>
+            <div style={{ fontSize: '14px', color: '#565959', lineHeight: '20px' }}>
+              <input
+                type="text"
+                defaultValue="typical copay, may vary based on insurance coverage."
+                className="w-full bg-transparent border-none outline-none"
+                style={{ fontSize: '14px', color: '#565959', padding: '0', lineHeight: '20px' }}
+              />
+            </div>
+          </div>
+
+          {/* CTA Button */}
+          <div style={{ marginBottom: '8px' }}>
+            <button className="w-full rounded" style={{ backgroundColor: '#FFD814', border: '1px solid #FCD200', padding: '9px 0', boxShadow: '0 2px 5px 0 rgba(213,217,217,0.5)' }}>
+              <input
+                type="text"
+                value={data.ctaText}
+                onChange={(e) => handleInputChange('ctaText', e.target.value)}
+                className="w-full bg-transparent border-none outline-none text-center"
+                style={{ fontSize: '13px', color: '#0F1111', fontWeight: '400', padding: '0' }}
+              />
+            </button>
+          </div>
+
+          {/* Learn More Link */}
+          <div>
             <input
               type="text"
-              value={data.price.replace('$', '')}
-              onChange={(e) => handleInputChange('price', '$' + e.target.value)}
-              className="bg-transparent border-none outline-none"
-              style={{ fontSize: '28px', color: '#0F1111', width: '70px', lineHeight: '1', fontWeight: '400' }}
-            />
-            <input
-              type="text"
-              value={data.priceUnit}
-              onChange={(e) => handleInputChange('priceUnit', e.target.value)}
-              className="bg-transparent border-none outline-none"
-              style={{ fontSize: '13px', color: '#565959', width: '40px', verticalAlign: 'super', position: 'relative', top: '-5px' }}
+              defaultValue="Learn more about coverage and pricing"
+              className="w-full bg-transparent border-none outline-none cursor-pointer hover:underline hover:text-red-700"
+              style={{ fontSize: '13px', color: '#007185', padding: '0', lineHeight: '20px', textAlign: 'left' }}
             />
           </div>
-          <div style={{ fontSize: '12px', color: '#565959', lineHeight: '16px' }}>
-            <input
-              type="text"
-              defaultValue="Per 1:1 support. Fees apply for additional medical services."
-              className="w-full bg-transparent border-none outline-none"
-              style={{ fontSize: '12px', color: '#565959' }}
-            />
-          </div>
-        </div>
-
-        {/* CTA Button */}
-        <div className="mb-3">
-          <button className="w-full transition-colors rounded-lg" style={{ backgroundColor: '#FFD814', border: '1px solid #FCD200', padding: '10px 16px', boxShadow: '0 2px 5px 0 rgba(213,217,217,0.5)' }}>
-            <input
-              type="text"
-              value={data.ctaText}
-              onChange={(e) => handleInputChange('ctaText', e.target.value)}
-              className="w-full bg-transparent border-none outline-none text-center"
-              style={{ fontSize: '15px', color: '#0F1111', fontWeight: '400' }}
-            />
-          </button>
-        </div>
-
-        {/* Learn More Link */}
-        <div className="text-center">
-          <input
-            type="text"
-            defaultValue="Learn more about coverage and pricing"
-            className="w-full bg-transparent border-none outline-none text-center cursor-pointer hover:underline hover:text-red-700"
-            style={{ fontSize: '13px', color: '#007185' }}
-          />
-        </div>
         </div>
       </div>
     </div>
