@@ -29,7 +29,7 @@ const SortableIncludedItem = ({ item, data, onUpdate }) => {
   }, [item.description]);
 
   return (
-    <div ref={setNodeRef} style={style} className="group grid grid-cols-[200px_1fr] border-b border-gray-200 last:border-b-0 relative">
+    <div ref={setNodeRef} style={{ ...style, gridTemplateColumns: 'minmax(140px, 1fr) 2fr' }} className="group grid border-b border-gray-200 last:border-b-0 relative">
       {/* Glass effect overlay */}
       <div
         className="absolute inset-0 rounded transition-all duration-200 pointer-events-none"
