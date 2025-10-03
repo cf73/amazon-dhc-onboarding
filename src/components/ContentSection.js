@@ -119,6 +119,7 @@ const SortableTestimonial = ({ item, updateItem, removeItem, textareaRefs }) => 
 
 // Sortable What to Expect Item
 const SortableExpectItem = ({ item, index, sections, onUpdateSection }) => {
+  const textareaRef = useRef(null);
   const {
     attributes,
     listeners,
@@ -134,6 +135,13 @@ const SortableExpectItem = ({ item, index, sections, onUpdateSection }) => {
   };
 
   const backgroundColor = index % 2 === 0 ? '#F5F7FD' : '#FAFAFA';
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
+    }
+  }, [item.description]);
 
   const { getRootProps: getImageRootProps, getInputProps: getImageInputProps } = useDropzone({
     accept: { 'image/*': [] },
@@ -152,9 +160,9 @@ const SortableExpectItem = ({ item, index, sections, onUpdateSection }) => {
   });
 
   return (
-    <div ref={setNodeRef} style={{ ...style, marginBottom: '20px' }} className="group relative">
+    <div ref={setNodeRef} style={{ ...style, marginBottom: '20px', touchAction: 'none' }}>
       <div
-        className="transition-all duration-200"
+        className="group relative transition-all duration-200"
         style={{
           backgroundColor: isDragging ? 'rgba(255, 255, 255, 0.67)' : backgroundColor,
           backdropFilter: isDragging ? 'blur(10px)' : 'none',
@@ -202,21 +210,23 @@ const SortableExpectItem = ({ item, index, sections, onUpdateSection }) => {
             placeholder="Lorem ipsum dolor"
           />
           <textarea
+            ref={textareaRef}
             value={item.description}
             onChange={(e) => {
               const updatedItems = sections.whatToExpect.map(expectItem =>
                 expectItem.id === item.id ? { ...expectItem, description: e.target.value } : expectItem
               );
               onUpdateSection('whatToExpect', updatedItems);
+              e.target.style.height = 'auto';
+              e.target.style.height = e.target.scrollHeight + 'px';
             }}
             onInput={(e) => {
               e.target.style.height = 'auto';
               e.target.style.height = e.target.scrollHeight + 'px';
             }}
-            className="w-full bg-transparent border-none outline-none resize-none"
+            className="w-full bg-transparent border-none outline-none resize-none overflow-hidden"
             style={{ fontFamily: 'Amazon Ember', fontSize: '15px', fontWeight: '400', color: '#0F1111', lineHeight: '20px' }}
             placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-            rows={3}
           />
         </div>
 
@@ -745,10 +755,10 @@ const ContentSection = ({ sections, onUpdateSection }) => {
           What to expect
         </h2>
         <SortableContext
-          items={(sections.whatToExpect || []).map(item => `expect-${item.id}`)}
+          items={(sections.whatToExpect || []).length > 0 ? sections.whatToExpect.map(item => `expect-${item.id}`) : ['expect-1', 'expect-2']}
           strategy={verticalListSortingStrategy}
         >
-          {(sections.whatToExpect || [
+          {(sections.whatToExpect && sections.whatToExpect.length > 0 ? sections.whatToExpect : [
             {
               id: '1',
               title: 'Customized plan',
