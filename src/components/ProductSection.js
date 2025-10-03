@@ -293,14 +293,14 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
            - xl: 1280px
            - 2xl: 1536px
            
-           Buy Box Wrap Breakpoint: xl (1280px)
-           - Above xl: 3 columns side-by-side
-           - Below xl: Buy box wraps to full width below
+           Buy Box Wrap Breakpoint: lg (1024px)
+           - Above lg: 3 columns side-by-side
+           - Below lg: Buy box wraps to full width below
            
            Column Behavior:
            - Image: Shrinks from 352px → 280px → 240px
            - Content: Grows/shrinks flexibly (min 300px)
-           - Buy Box: Fixed 350px above xl, full width below
+           - Buy Box: Fixed 350px above lg, full width below
            ============================================ */
         
         .product-layout {
@@ -336,14 +336,14 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
           min-width: 300px;
         }
         
-        /* Buy Box - Wraps at xl breakpoint */
+        /* Buy Box - Wraps at lg breakpoint */
         .buy-box {
           flex: 1 1 100%;
           width: 100%;
           min-width: 100%;
         }
         
-        @media (min-width: 1280px) { /* xl - Buy box becomes 3rd column */
+        @media (min-width: 1024px) { /* lg - Buy box becomes 3rd column */
           .buy-box {
             flex: 0 0 350px;
             width: 350px;
