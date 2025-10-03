@@ -287,7 +287,7 @@ const ControlPanel = ({ onSave, onLoad, onExportPDF, onExportHTML, isLoading, xr
                 </button>
                 
                 <div 
-                  className="pt-3 pb-2"
+                  className="pt-3 pb-6"
                   style={{
                     borderTop: '1px solid rgba(0, 0, 0, 0.08)'
                   }}
