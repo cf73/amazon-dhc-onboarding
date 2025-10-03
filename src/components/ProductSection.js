@@ -290,28 +290,38 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
         }
         
         .product-image-column {
-          flex-shrink: 1;
-          min-width: 280px;
+          flex: 0 1 352px;
+          min-width: 240px;
           max-width: 352px;
-          width: 352px;
         }
         
         .product-content-column {
-          flex: 1;
-          min-width: 0;
+          flex: 1 1 400px;
+          min-width: 280px;
         }
         
         .buy-box {
-          flex-shrink: 0;
-          width: 350px;
-          min-width: 350px;
+          flex: 0 1 350px;
+          min-width: 280px;
+          max-width: 350px;
         }
         
-        @media (max-width: 1145px) {
+        @media (max-width: 1200px) {
+          .product-image-column {
+            flex: 0 1 280px;
+          }
           .buy-box {
-            width: 100% !important;
-            min-width: 100% !important;
-            flex-basis: 100% !important;
+            flex: 0 1 300px;
+            min-width: 260px;
+          }
+        }
+        
+        @media (max-width: 1024px) {
+          .buy-box {
+            flex-basis: 100%;
+            width: 100%;
+            max-width: 100%;
+            min-width: 100%;
           }
         }
       `}</style>
@@ -826,6 +836,7 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
 };
 
 export default ProductSection;
+
 
 
 
