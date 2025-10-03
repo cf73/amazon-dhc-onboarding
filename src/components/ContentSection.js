@@ -957,6 +957,156 @@ const ContentSection = ({ sections, onUpdateSection }) => {
           Add FAQ
         </button>
       </div>
+
+      {/* About Fay Section */}
+      <div className="pt-12" style={{ paddingLeft: '60px', paddingRight: '60px' }}>
+        <div className="flex items-start gap-3 mb-6">
+          {/* Editable Logo */}
+          <div className="flex-shrink-0">
+            {sections.aboutFay?.logo ? (
+              <div className="relative group">
+                <img 
+                  src={sections.aboutFay.logo} 
+                  alt="Logo" 
+                  style={{ width: '120px', height: '40px', objectFit: 'contain' }}
+                />
+                <button
+                  onClick={() => {
+                    onUpdateSection('aboutFay', { ...sections.aboutFay, logo: null });
+                  }}
+                  className="absolute -top-2 -right-2 p-1 bg-white rounded-full shadow-lg hover:bg-gray-100 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <XMarkIcon className="w-3 h-3 text-gray-600" />
+                </button>
+              </div>
+            ) : (
+              <div
+                onClick={() => {
+                  const input = document.createElement('input');
+                  input.type = 'file';
+                  input.accept = 'image/*';
+                  input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                      onUpdateSection('aboutFay', { 
+                        ...sections.aboutFay, 
+                        logo: reader.result 
+                      });
+                    };
+                    reader.readAsDataURL(file);
+                  };
+                  input.click();
+                }}
+                className="cursor-pointer border-2 border-dashed border-gray-300 rounded flex items-center justify-center hover:border-amazon-orange transition-colors"
+                style={{ width: '120px', height: '40px' }}
+              >
+                <PhotoIcon className="w-5 h-5 text-gray-400" />
+              </div>
+            )}
+          </div>
+          
+          {/* Heading */}
+          <div>
+            <h3 style={{ fontFamily: 'Amazon Ember', fontSize: '20px', fontWeight: '700', color: '#232f3e', lineHeight: '24px' }}>
+              About{' '}
+              <input
+                type="text"
+                value={sections.aboutFay?.brandName || 'Company name'}
+                onChange={(e) => {
+                  onUpdateSection('aboutFay', { 
+                    ...sections.aboutFay, 
+                    brandName: e.target.value 
+                  });
+                }}
+                className="bg-transparent border-none outline-none"
+                style={{ fontFamily: 'Amazon Ember', fontSize: '20px', fontWeight: '700', color: '#232f3e', lineHeight: '24px', width: 'auto', display: 'inline' }}
+                placeholder="Company name"
+              />
+            </h3>
+          </div>
+        </div>
+
+        {/* Description Paragraphs */}
+        <div className="space-y-4">
+          <textarea
+            value={sections.aboutFay?.paragraph1 || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'}
+            onChange={(e) => {
+              onUpdateSection('aboutFay', { 
+                ...sections.aboutFay, 
+                paragraph1: e.target.value 
+              });
+            }}
+            onInput={(e) => {
+              e.target.style.height = 'auto';
+              e.target.style.height = e.target.scrollHeight + 'px';
+            }}
+            className="w-full bg-transparent border-none outline-none resize-none overflow-hidden"
+            style={{ fontFamily: 'Amazon Ember', fontSize: '14px', fontWeight: '400', color: '#565959', lineHeight: '21px' }}
+            placeholder="First paragraph..."
+          />
+          
+          <textarea
+            value={sections.aboutFay?.paragraph2 || 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'}
+            onChange={(e) => {
+              onUpdateSection('aboutFay', { 
+                ...sections.aboutFay, 
+                paragraph2: e.target.value 
+              });
+            }}
+            onInput={(e) => {
+              e.target.style.height = 'auto';
+              e.target.style.height = e.target.scrollHeight + 'px';
+            }}
+            className="w-full bg-transparent border-none outline-none resize-none overflow-hidden"
+            style={{ fontFamily: 'Amazon Ember', fontSize: '14px', fontWeight: '400', color: '#565959', lineHeight: '21px' }}
+            placeholder="Second paragraph..."
+          />
+        </div>
+
+        {/* Footer Notes */}
+        <div className="mt-8 space-y-2" style={{ fontSize: '12px', color: '#565959', lineHeight: '16px' }}>
+          <input
+            type="text"
+            value={sections.aboutFay?.footnote1 || '* Eligibility is based on application and acceptance into the program.'}
+            onChange={(e) => {
+              onUpdateSection('aboutFay', { 
+                ...sections.aboutFay, 
+                footnote1: e.target.value 
+              });
+            }}
+            className="w-full bg-transparent border-none outline-none"
+            style={{ fontFamily: 'Amazon Ember', fontSize: '12px', fontWeight: '400', color: '#565959', lineHeight: '16px' }}
+            placeholder="* Footnote 1"
+          />
+          <input
+            type="text"
+            value={sections.aboutFay?.footnote2 || '† Internal Fay Client Survey, March 2023 (n = 167)'}
+            onChange={(e) => {
+              onUpdateSection('aboutFay', { 
+                ...sections.aboutFay, 
+                footnote2: e.target.value 
+              });
+            }}
+            className="w-full bg-transparent border-none outline-none"
+            style={{ fontFamily: 'Amazon Ember', fontSize: '12px', fontWeight: '400', color: '#565959', lineHeight: '16px' }}
+            placeholder="† Footnote 2"
+          />
+          <input
+            type="text"
+            value={sections.aboutFay?.footnote3 || '‡ Source: Internal Claims Processing (Date Range: 01/01/25 — 06/30/25)'}
+            onChange={(e) => {
+              onUpdateSection('aboutFay', { 
+                ...sections.aboutFay, 
+                footnote3: e.target.value 
+              });
+            }}
+            className="w-full bg-transparent border-none outline-none"
+            style={{ fontFamily: 'Amazon Ember', fontSize: '12px', fontWeight: '400', color: '#565959', lineHeight: '16px' }}
+            placeholder="‡ Footnote 3"
+          />
+        </div>
+      </div>
     </div>
   );
 };
