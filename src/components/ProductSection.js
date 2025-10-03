@@ -272,18 +272,26 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
 
   return (
     <div style={{ paddingLeft: '60px', paddingRight: '60px', paddingTop: '32px' }}>
-      <div className="flex items-start" style={{ minWidth: '798px', gap: '48px' }}>
+      <style>{`
+        @media (max-width: 1145px) {
+          .buy-box {
+            width: 100% !important;
+            min-width: 100% !important;
+            flex-basis: 100% !important;
+          }
+        }
+      `}</style>
+      <div className="flex flex-wrap items-start" style={{ gap: '48px' }}>
       {/* Left Column - Product Images */}
-        <div className="flex-shrink-0 w-[352px]">
+        <div className="flex-shrink-0" style={{ minWidth: '280px', maxWidth: '352px', width: '352px' }}>
         {/* Main Product Image */}
         <div className="main-image-container mb-4">
             {data.images?.hero ? (
-            <div className="relative group" style={{ width: '352px', height: '470px' }}>
+            <div className="relative group" style={{ width: '100%', paddingTop: '133.5%' }}>
               <img
                 src={data.images.hero}
                 alt="Main Product"
-                className="object-cover rounded-lg"
-                style={{ width: '352px', height: '470px' }}
+                className="absolute top-0 left-0 w-full h-full object-cover rounded-lg"
               />
               <button
                 onClick={() => onUpdate({ images: { ...data.images, hero: null } })}
@@ -296,20 +304,22 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
             <div 
               {...getHeroRootProps()} 
               className="cursor-pointer border-2 border-dashed rounded-lg transition-colors flex items-center justify-center bg-gray-50"
-              style={{ width: '352px', height: '470px', borderColor: '#D5D9D9' }}
+              style={{ width: '100%', paddingTop: '133.5%', position: 'relative', borderColor: '#D5D9D9' }}
             >
               <input {...getHeroInputProps()} />
+                <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center">
-                <PhotoIcon className="w-12 h-12 mx-auto mb-3" style={{ color: '#8B96A5' }} />
-                <p style={{ fontFamily: 'Amazon Ember', fontSize: '14px', fontWeight: '400', color: '#565959', marginBottom: '4px' }}>
-                  Drop image or click to upload
-                </p>
-                <p style={{ fontFamily: 'Amazon Ember', fontSize: '12px', fontWeight: '400', color: '#8B96A5' }}>
-                  352x470px recommended
-                </p>
-                <p style={{ fontFamily: 'Amazon Ember', fontSize: '11px', fontWeight: '400', color: '#8B96A5', marginTop: '8px' }}>
-                  Use 2x resolution (704x940px) for high DPI screens
-                </p>
+                    <PhotoIcon className="w-12 h-12 mx-auto mb-3" style={{ color: '#8B96A5' }} />
+                    <p style={{ fontFamily: 'Amazon Ember', fontSize: '14px', fontWeight: '400', color: '#565959', marginBottom: '4px' }}>
+                      Drop image or click to upload
+                    </p>
+                    <p style={{ fontFamily: 'Amazon Ember', fontSize: '12px', fontWeight: '400', color: '#8B96A5' }}>
+                      352x470px recommended
+                    </p>
+                    <p style={{ fontFamily: 'Amazon Ember', fontSize: '11px', fontWeight: '400', color: '#8B96A5', marginTop: '8px' }}>
+                      Use 2x resolution (704x940px) for high DPI screens
+                    </p>
+                  </div>
                 </div>
               </div>
             )}
@@ -435,7 +445,7 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
         )}
 
       {/* Center Column - Main Content */}
-        <div className="flex-1">
+        <div className="flex-1" style={{ minWidth: '0' }}>
         {/* Product Title */}
         <textarea
           value={data.title}
@@ -560,7 +570,7 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
       </div>
 
       {/* Right Column - Price & CTA */}
-        <div className="flex-shrink-0 w-[350px] bg-white rounded" style={{ border: '1px solid #D5D9D9', padding: '18px 20px' }}>
+        <div className="flex-shrink-0 bg-white rounded buy-box" style={{ border: '1px solid #D5D9D9', padding: '18px 20px', width: '350px', minWidth: '350px' }}>
         {/* Price Section */}
           <div style={{ marginBottom: '16px' }}>
             <div style={{ fontSize: '14px', color: '#0F1111', marginBottom: '4px', fontWeight: '700' }}>Price with coverage:</div>
