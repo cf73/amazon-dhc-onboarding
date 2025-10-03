@@ -305,7 +305,7 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
           min-width: 280px;
         }
         
-        @media (min-width: 1200px) {
+        @media (min-width: 1331px) {
           .buy-box {
             flex: 0 1 350px;
             max-width: 350px;
@@ -315,10 +315,6 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
         @media (max-width: 1199px) and (min-width: 900px) {
           .product-image-column {
             flex: 0 1 280px;
-          }
-          .buy-box {
-            flex: 1 1 300px;
-            min-width: 260px;
           }
         }
       `}</style>
