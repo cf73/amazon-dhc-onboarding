@@ -3,6 +3,7 @@ import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { PlusIcon, XMarkIcon, ChevronDownIcon, PhotoIcon } from '@heroicons/react/24/outline';
 import { v4 as uuidv4 } from 'uuid';
 import quoteMarks from '../assets/quotemarks.png';
+import jadeCheckmark from '../assets/jade-checkmark-transparent.png';
 
 const ContentSection = ({ sections, onUpdateSection }) => {
   const textareaRefs = useRef({});
@@ -15,7 +16,7 @@ const ContentSection = ({ sections, onUpdateSection }) => {
         textarea.style.height = textarea.scrollHeight + 'px';
       }
     });
-  }, [sections.testimonials]);
+  }, [sections.testimonials, sections.fromBrand]);
   
   const addItem = (sectionName, newItem) => {
     const currentItems = sections[sectionName] || [];
@@ -101,13 +102,13 @@ const ContentSection = ({ sections, onUpdateSection }) => {
                       </div>
 
                       {/* Author */}
-                      <div className="flex items-center justify-center" style={{ fontFamily: 'Amazon Ember', fontSize: '14px', fontWeight: '400', lineHeight: '21px', color: '#565959', gap: '4px' }}>
-                        <span>—</span>
+                      <div className="flex items-center justify-center" style={{ fontFamily: 'Amazon Ember', fontSize: '14px', fontWeight: '400', lineHeight: '21px', color: '#565959' }}>
+                        <span style={{ marginRight: '4px' }}>—</span>
                         <input
                           type="text"
                           value={item.author}
                           onChange={(e) => updateItem('testimonials', item.id, { author: e.target.value })}
-                          className="bg-transparent border-none outline-none text-center"
+                          className="bg-transparent border-none outline-none text-left"
                           style={{ fontFamily: 'Amazon Ember', fontSize: '14px', fontWeight: '400', lineHeight: '21px', color: '#565959' }}
                           placeholder="Tanya F., Florida"
                         />
@@ -127,32 +128,35 @@ const ContentSection = ({ sections, onUpdateSection }) => {
             </div>
           )}
         </Droppable>
-        <button
-          onClick={() => addItem('testimonials', { 
-            text: 'New testimonial content goes here...', 
-            author: '– Member Name' 
-          })}
-          className="flex items-center gap-2 text-amazon-orange hover:text-amazon-orange-dark font-medium text-sm"
-        >
-          <PlusIcon className="w-4 h-4" />
-          Add Testimonial
-        </button>
+        <div className="flex justify-center">
+          <button
+            onClick={() => addItem('testimonials', { 
+              text: 'New testimonial content goes here...', 
+              author: 'Member Name' 
+            })}
+            className="flex items-center gap-2 text-amazon-orange hover:text-amazon-orange-dark font-medium text-sm"
+          >
+            <PlusIcon className="w-4 h-4" />
+            Add Testimonial
+          </button>
+        </div>
       </div>
 
       {/* From the Brand Section */}
-      <div className="pt-6 border-t border-amazon-border-light">
-        <h2 className="text-xl font-bold mb-8 text-amazon-text">From the brand</h2>
-        <div className="grid grid-cols-[400px_1fr] gap-8 items-start mb-8">
+      <div className="pt-6" style={{ paddingLeft: '60px', paddingRight: '60px' }}>
+        <h2 style={{ fontFamily: 'Amazon Ember', fontSize: '18px', fontWeight: '700', color: '#0F1111', marginBottom: '16px' }}>From the brand</h2>
+        <div className="grid items-start mb-8" style={{ gridTemplateColumns: '555px 1fr', gap: '16px' }}>
           {/* Left Column - Image */}
           <div className="relative">
             {sections.fromBrand?.image ? (
               <img
                 src={sections.fromBrand.image}
                 alt="Brand content"
-                className="w-full h-64 object-cover rounded-lg"
+                className="object-cover rounded-lg"
+                style={{ width: '555px', height: '312px' }}
               />
             ) : (
-              <div className="w-full h-64 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center">
+              <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center" style={{ width: '555px', height: '312px' }}>
                 <div className="text-center">
                   <PhotoIcon className="w-12 h-12 text-gray-400 mx-auto mb-2" />
                   <p className="text-gray-500 text-sm">Upload brand image</p>
@@ -178,80 +182,126 @@ const ContentSection = ({ sections, onUpdateSection }) => {
 
           {/* Right Column - Content */}
           <div>
-            <div className="mb-3">
+            <div style={{ marginBottom: '8px' }}>
               <input
                 type="text"
                 value={sections.fromBrand?.category || ''}
                 onChange={(e) => onUpdateSection('fromBrand', { ...sections.fromBrand, category: e.target.value })}
-                className="text-sm text-gray-600 bg-transparent border-none outline-none w-full"
-                placeholder="Lorem Ipsum Category"
+                className="bg-transparent border-none outline-none w-full"
+                style={{ 
+                  fontFamily: 'Amazon Ember', 
+                  fontSize: '14px', 
+                  fontWeight: '600', 
+                  color: '#232f3e',
+                  lineHeight: '21px',
+                  textAlign: 'start'
+                }}
+                placeholder="Fay Nutrition Counseling Program"
               />
             </div>
             
-            <h3 className="mb-4">
+            <h3 style={{ marginBottom: '12px' }}>
               <textarea
+                ref={(el) => (textareaRefs.current['fromBrand-title'] = el)}
                 value={sections.fromBrand?.title || ''}
                 onChange={(e) => onUpdateSection('fromBrand', { ...sections.fromBrand, title: e.target.value })}
-                className="text-2xl font-bold text-amazon-text bg-transparent border-none outline-none w-full resize-none leading-tight"
-                placeholder="Lorem ipsum dolor sit amet consectetur"
-                rows={2}
+                onInput={(e) => {
+                  e.target.style.height = 'auto';
+                  e.target.style.height = e.target.scrollHeight + 'px';
+                }}
+                className="bg-transparent border-none outline-none w-full resize-none overflow-hidden"
+                style={{ 
+                  fontFamily: 'Amazon Ember', 
+                  fontSize: '26px', 
+                  fontWeight: '700', 
+                  color: '#0F1111',
+                  lineHeight: '30px',
+                  overflowWrap: 'break-word',
+                  textAlign: 'left',
+                  minHeight: '30px'
+                }}
+                placeholder="Your journey to better health starts with Fay"
+                rows={1}
               />
             </h3>
             
-            <div className="mb-6">
+            <div style={{ marginBottom: '16px' }}>
               <textarea
+                ref={(el) => (textareaRefs.current['fromBrand-description'] = el)}
                 value={sections.fromBrand?.description || ''}
                 onChange={(e) => onUpdateSection('fromBrand', { ...sections.fromBrand, description: e.target.value })}
-                className="text-gray-600 leading-relaxed bg-transparent border-none outline-none w-full resize-none"
-                placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-                rows={3}
+                onInput={(e) => {
+                  e.target.style.height = 'auto';
+                  e.target.style.height = e.target.scrollHeight + 'px';
+                }}
+                className="bg-transparent border-none outline-none w-full resize-none overflow-hidden"
+                style={{ 
+                  fontFamily: 'Amazon Ember', 
+                  fontSize: '14px', 
+                  fontWeight: '400', 
+                  color: '#565959',
+                  lineHeight: '21px',
+                  minHeight: '42px'
+                }}
+                placeholder="Fay is a leader in the health and wellness space and has helped over 100,000 people improve their health through expert nutrition care."
+                rows={2}
               />
             </div>
 
             {/* Bullet Points */}
-            <div className="space-y-3">
-              {(sections.fromBrand?.bulletPoints || []).map((bullet, bulletIndex) => (
-                <div key={bulletIndex} className="group-bullet flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-sm bg-teal-500 flex items-center justify-center mt-0.5 flex-shrink-0">
-                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                  </div>
-                  <div className="flex-1 relative">
-                    <input
-                      type="text"
-                      value={bullet}
-                      onChange={(e) => {
-                        const newBullets = [...(sections.fromBrand?.bulletPoints || [])];
-                        newBullets[bulletIndex] = e.target.value;
-                        onUpdateSection('fromBrand', { ...sections.fromBrand, bulletPoints: newBullets });
-                      }}
-                      className="w-full text-sm text-gray-700 bg-transparent border-none outline-none"
-                      placeholder="Lorem ipsum dolor sit amet consectetur adipiscing elit"
+            <div style={{ backgroundColor: '#F0F2F2', padding: '24px', borderRadius: '8px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {(sections.fromBrand?.bulletPoints || []).map((bullet, bulletIndex) => (
+                  <div key={bulletIndex} className="group flex items-center" style={{ gap: '12px' }}>
+                    <img 
+                      src={jadeCheckmark} 
+                      alt="checkmark" 
+                      style={{ width: '15px', height: '11.25px', flexShrink: 0 }}
                     />
-                    <button
-                      onClick={() => {
-                        const newBullets = [...(sections.fromBrand?.bulletPoints || [])];
-                        newBullets.splice(bulletIndex, 1);
-                        onUpdateSection('fromBrand', { ...sections.fromBrand, bulletPoints: newBullets });
-                      }}
-                      className="absolute top-0 right-0 p-1 text-red-500 hover:text-red-700 opacity-0 group-bullet:hover:opacity-100 transition-opacity"
-                    >
-                      <XMarkIcon className="w-3 h-3" />
-                    </button>
+                    <div className="flex-1 relative">
+                      <input
+                        type="text"
+                        value={bullet}
+                        onChange={(e) => {
+                          const newBullets = [...(sections.fromBrand?.bulletPoints || [])];
+                          newBullets[bulletIndex] = e.target.value;
+                          onUpdateSection('fromBrand', { ...sections.fromBrand, bulletPoints: newBullets });
+                        }}
+                        className="w-full bg-transparent border-none outline-none"
+                        style={{ 
+                          fontFamily: 'Amazon Ember', 
+                          fontSize: '14px', 
+                          fontWeight: '400', 
+                          color: '#0F1111',
+                          lineHeight: '20px'
+                        }}
+                        placeholder="40,000+ 5-star reviews from Fay clients"
+                      />
+                      <button
+                        onClick={() => {
+                          const newBullets = [...(sections.fromBrand?.bulletPoints || [])];
+                          newBullets.splice(bulletIndex, 1);
+                          onUpdateSection('fromBrand', { ...sections.fromBrand, bulletPoints: newBullets });
+                        }}
+                        className="absolute top-0 right-0 p-1 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <XMarkIcon className="w-3 h-3" />
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
-              <button
-                onClick={() => {
-                  const newBullets = [...(sections.fromBrand?.bulletPoints || []), 'New benefit point'];
-                  onUpdateSection('fromBrand', { ...sections.fromBrand, bulletPoints: newBullets });
-                }}
-                className="flex items-center gap-2 text-teal-600 hover:text-teal-700 font-medium text-sm"
-              >
-                <PlusIcon className="w-4 h-4" />
-                Add Bullet Point
-              </button>
+                ))}
+                <button
+                  onClick={() => {
+                    const newBullets = [...(sections.fromBrand?.bulletPoints || []), 'New benefit point'];
+                    onUpdateSection('fromBrand', { ...sections.fromBrand, bulletPoints: newBullets });
+                  }}
+                  className="flex items-center text-amazon-orange hover:text-amazon-orange-dark"
+                  style={{ gap: '8px', fontFamily: 'Amazon Ember', fontSize: '13px', fontWeight: '400' }}
+                >
+                  <PlusIcon className="w-4 h-4" />
+                  Add Bullet Point
+                </button>
+              </div>
             </div>
           </div>
         </div>
