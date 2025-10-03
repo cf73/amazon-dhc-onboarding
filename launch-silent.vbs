@@ -3,3 +3,14 @@ WshShell.Run chr(34) & "start-standalone.bat" & Chr(34), 0
 Set WshShell = Nothing
 
 
+
+
+
+
+
+
+
+
+
+
+

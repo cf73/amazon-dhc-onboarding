@@ -125,3 +125,14 @@ Users can run these files on any computer without installing Node.js, Electron, 
 - **Disk**: 200MB for app + space for user data
 
 
+
+
+
+
+
+
+
+
+
+
+

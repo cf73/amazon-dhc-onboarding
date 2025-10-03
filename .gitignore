@@ -84,3 +84,4 @@ start-*.bat
 serve.bat
 build-standalone.bat
 deploy.bat
+.vercel
