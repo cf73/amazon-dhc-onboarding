@@ -299,17 +299,7 @@ function App() {
         <AmazonHeader />
         
         {/* Main Content */}
-        <main className="max-w-amazon mx-auto px-4 bg-white font-amazon">
-          {/* Breadcrumb */}
-          <nav className="pt-4 pb-2 text-xs text-amazon-text-light">
-            <input
-              type="text"
-              value={projectData.breadcrumb}
-              onChange={(e) => updateProjectData({ breadcrumb: e.target.value })}
-              className="bg-transparent border-none outline-none cursor-pointer hover:text-amazon-red hover:underline"
-            />
-          </nav>
-
+        <main className="bg-white font-amazon">
           {/* Product Section */}
           <ProductSection
             data={projectData}
