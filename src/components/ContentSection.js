@@ -429,7 +429,7 @@ const ContentSection = ({ sections, onUpdateSection }) => {
                 )}
                 strategy={verticalListSortingStrategy}
               >
-                <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '16px', paddingTop: '12px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '16px' }}>
                   {(sections.fromBrand?.bulletPoints || []).map((bullet, bulletIndex) => (
                     <SortableBullet
                       key={typeof bullet === 'object' && bullet.id ? `fromBrand-${bullet.id}` : `fromBrand-bullet-${bulletIndex}`}
@@ -460,52 +460,36 @@ const ContentSection = ({ sections, onUpdateSection }) => {
       </div>
 
       {/* Successful Outcomes Section */}
-      <div className="pt-6 border-t border-amazon-border-light">
+      <div className="pt-6" style={{ paddingLeft: '60px', paddingRight: '60px' }}>
         <h2 className="text-xl font-bold mb-8 text-amazon-text">
-          <input
-            type="text"
-            value={sections.successfulOutcomes?.title || 'Successful outcomes of the program'}
-            onChange={(e) => onUpdateSection('successfulOutcomes', { ...sections.successfulOutcomes, title: e.target.value })}
-            className="w-full bg-transparent border-none outline-none text-xl font-bold text-amazon-text"
-            placeholder="Lorem ipsum dolor sit amet"
-          />
+          Successful outcomes of the program†
         </h2>
         
         <div className="grid grid-cols-3 gap-8 mb-8">
           {/* Column 1 */}
-          <div className="text-center">
+          <div style={{ textAlign: 'start' }}>
             <div className="mb-2">
               <input
                 type="text"
-                value={sections.successfulOutcomes?.stat1?.number || '12%'}
+                value={sections.successfulOutcomes?.stat1?.number || '85%'}
                 onChange={(e) => onUpdateSection('successfulOutcomes', { 
                   ...sections.successfulOutcomes, 
                   stat1: { ...sections.successfulOutcomes?.stat1, number: e.target.value }
                 })}
-                className="text-3xl font-bold text-teal-600 bg-transparent border-none outline-none text-center w-full"
-                placeholder="42%"
+                className="bg-transparent border-none outline-none w-full"
+                style={{ fontFamily: 'Amazon Ember', fontSize: '26px', fontWeight: 'bolder', lineHeight: '30px', color: '#037575', textAlign: 'start' }}
+                placeholder="85%"
               />
-              <span className="text-3xl font-bold text-teal-600 ml-1">
-                <input
-                  type="text"
-                  value={sections.successfulOutcomes?.stat1?.label || 'more pregnancies'}
-                  onChange={(e) => onUpdateSection('successfulOutcomes', { 
-                    ...sections.successfulOutcomes, 
-                    stat1: { ...sections.successfulOutcomes?.stat1, label: e.target.value }
-                  })}
-                  className="bg-transparent border-none outline-none text-center"
-                  placeholder="lorem ipsum"
-                />
-              </span>
             </div>
-            <div className="text-sm text-gray-600">
+            <div>
               <textarea
                 value={sections.successfulOutcomes?.stat1?.description || 'per IVF transfer compared to national average†'}
                 onChange={(e) => onUpdateSection('successfulOutcomes', { 
                   ...sections.successfulOutcomes, 
                   stat1: { ...sections.successfulOutcomes?.stat1, description: e.target.value }
                 })}
-                className="w-full bg-transparent border-none outline-none text-center resize-none text-sm text-gray-600"
+                className="w-full bg-transparent border-none outline-none resize-none"
+                style={{ fontFamily: 'Amazon Ember', fontSize: '16px', fontWeight: '400', lineHeight: '24px', color: '#232F3E', textAlign: 'start' }}
                 placeholder="consectetur adipiscing elit sed do eiusmod"
                 rows={2}
               />
@@ -513,39 +497,29 @@ const ContentSection = ({ sections, onUpdateSection }) => {
           </div>
 
           {/* Column 2 */}
-          <div className="text-center">
+          <div style={{ textAlign: 'start' }}>
             <div className="mb-2">
               <input
                 type="text"
-                value={sections.successfulOutcomes?.stat2?.number || '21%'}
+                value={sections.successfulOutcomes?.stat2?.number || '9 out of 10'}
                 onChange={(e) => onUpdateSection('successfulOutcomes', { 
                   ...sections.successfulOutcomes, 
                   stat2: { ...sections.successfulOutcomes?.stat2, number: e.target.value }
                 })}
-                className="text-3xl font-bold text-teal-600 bg-transparent border-none outline-none text-center w-full"
-                placeholder="67%"
+                className="bg-transparent border-none outline-none w-full"
+                style={{ fontFamily: 'Amazon Ember', fontSize: '26px', fontWeight: 'bolder', lineHeight: '30px', color: '#037575', textAlign: 'start' }}
+                placeholder="9 out of 10"
               />
-              <span className="text-3xl font-bold text-teal-600 ml-1">
-                <input
-                  type="text"
-                  value={sections.successfulOutcomes?.stat2?.label || 'fewer miscarriages'}
-                  onChange={(e) => onUpdateSection('successfulOutcomes', { 
-                    ...sections.successfulOutcomes, 
-                    stat2: { ...sections.successfulOutcomes?.stat2, label: e.target.value }
-                  })}
-                  className="bg-transparent border-none outline-none text-center"
-                  placeholder="dolor sit amet"
-                />
-              </span>
             </div>
-            <div className="text-sm text-gray-600">
+            <div>
               <textarea
                 value={sections.successfulOutcomes?.stat2?.description || 'compared to national average†'}
                 onChange={(e) => onUpdateSection('successfulOutcomes', { 
                   ...sections.successfulOutcomes, 
                   stat2: { ...sections.successfulOutcomes?.stat2, description: e.target.value }
                 })}
-                className="w-full bg-transparent border-none outline-none text-center resize-none text-sm text-gray-600"
+                className="w-full bg-transparent border-none outline-none resize-none"
+                style={{ fontFamily: 'Amazon Ember', fontSize: '16px', fontWeight: '400', lineHeight: '24px', color: '#232F3E', textAlign: 'start' }}
                 placeholder="tempor incididunt ut labore et dolore"
                 rows={2}
               />
@@ -553,39 +527,29 @@ const ContentSection = ({ sections, onUpdateSection }) => {
           </div>
 
           {/* Column 3 */}
-          <div className="text-center">
+          <div style={{ textAlign: 'start' }}>
             <div className="mb-2">
               <input
                 type="text"
-                value={sections.successfulOutcomes?.stat3?.number || '23%'}
+                value={sections.successfulOutcomes?.stat3?.number || '$25'}
                 onChange={(e) => onUpdateSection('successfulOutcomes', { 
                   ...sections.successfulOutcomes, 
                   stat3: { ...sections.successfulOutcomes?.stat3, number: e.target.value }
                 })}
-                className="text-3xl font-bold text-teal-600 bg-transparent border-none outline-none text-center w-full"
-                placeholder="89%"
+                className="bg-transparent border-none outline-none w-full"
+                style={{ fontFamily: 'Amazon Ember', fontSize: '26px', fontWeight: 'bolder', lineHeight: '30px', color: '#037575', textAlign: 'start' }}
+                placeholder="$25"
               />
-              <span className="text-3xl font-bold text-teal-600 ml-1">
-                <input
-                  type="text"
-                  value={sections.successfulOutcomes?.stat3?.label || 'more live births'}
-                  onChange={(e) => onUpdateSection('successfulOutcomes', { 
-                    ...sections.successfulOutcomes, 
-                    stat3: { ...sections.successfulOutcomes?.stat3, label: e.target.value }
-                  })}
-                  className="bg-transparent border-none outline-none text-center"
-                  placeholder="magna aliqua"
-                />
-              </span>
             </div>
-            <div className="text-sm text-gray-600">
+            <div>
               <textarea
                 value={sections.successfulOutcomes?.stat3?.description || 'compared to national average‡'}
                 onChange={(e) => onUpdateSection('successfulOutcomes', { 
                   ...sections.successfulOutcomes, 
                   stat3: { ...sections.successfulOutcomes?.stat3, description: e.target.value }
                 })}
-                className="w-full bg-transparent border-none outline-none text-center resize-none text-sm text-gray-600"
+                className="w-full bg-transparent border-none outline-none resize-none"
+                style={{ fontFamily: 'Amazon Ember', fontSize: '16px', fontWeight: '400', lineHeight: '24px', color: '#232F3E', textAlign: 'start' }}
                 placeholder="ut enim ad minim veniam quis nostrud"
                 rows={2}
               />
