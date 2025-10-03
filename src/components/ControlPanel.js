@@ -218,16 +218,12 @@ const ControlPanel = ({ onSave, onLoad, onExportPDF, onExportHTML, isLoading, xr
               >
                 <div>
                   <h3 className="font-bold text-lg mb-1" style={{ color: '#1a1a2e' }}>Amazon CMS</h3>
-                  <div className="text-sm" style={{ color: 'rgba(0, 0, 0, 0.5)' }}>
-                    {isLoading ? (
-                      <div className="flex items-center gap-2">
-                        <ArrowPathIcon className="w-4 h-4 animate-spin" />
-                        Processing...
-                      </div>
-                    ) : (
-                      'Ready'
-                    )}
-                  </div>
+                  {isLoading && (
+                    <div className="flex items-center gap-2 text-sm" style={{ color: 'rgba(0, 0, 0, 0.5)' }}>
+                      <ArrowPathIcon className="w-4 h-4 animate-spin" />
+                      Processing...
+                    </div>
+                  )}
                 </div>
                 <button
                   onClick={() => setIsExpanded(false)}
@@ -238,7 +234,26 @@ const ControlPanel = ({ onSave, onLoad, onExportPDF, onExportHTML, isLoading, xr
               </div>
               
               {/* Content */}
-              <div className="p-6 space-y-3 flex-1">
+              <div className="p-6 space-y-4 flex-1">
+                {/* Educational copy */}
+                <div 
+                  className="p-4 rounded-lg"
+                  style={{ 
+                    backgroundColor: 'rgba(99, 102, 241, 0.08)',
+                    border: '1px solid rgba(99, 102, 241, 0.15)'
+                  }}
+                >
+                  <p 
+                    className="text-sm leading-relaxed"
+                    style={{ 
+                      color: 'rgba(26, 26, 46, 0.85)',
+                      lineHeight: '1.6'
+                    }}
+                  >
+                    Your changes are automatically saved as JSON files. Save your project to download it, then share with others or open on different computers using Load Project.
+                  </p>
+                </div>
+
                 <button
                   onClick={onSave}
                   disabled={isLoading}
