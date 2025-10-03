@@ -227,6 +227,15 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
   const [showThumbnailModal, setShowThumbnailModal] = useState(false);
   const [showPriceTextDropdown, setShowPriceTextDropdown] = useState(false);
   const [priceText, setPriceText] = useState(data.priceText || 'typical copay, may vary based on insurance coverage.');
+  const descriptionRef = React.useRef(null);
+
+  // Auto-resize description textarea on mount and data change
+  React.useEffect(() => {
+    if (descriptionRef.current) {
+      descriptionRef.current.style.height = 'auto';
+      descriptionRef.current.style.height = descriptionRef.current.scrollHeight + 'px';
+    }
+  }, [data.description]);
 
   // Hero image dropzone
   const { getRootProps: getHeroRootProps, getInputProps: getHeroInputProps } = useDropzone({
@@ -499,11 +508,15 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
         <div style={{ marginBottom: '24px' }}>
           <h3 style={{ fontSize: '18px', color: '#0F1111', fontWeight: '700', marginBottom: '8px' }}>Description</h3>
           <textarea
+            ref={descriptionRef}
             value={data.description}
             onChange={(e) => handleInputChange('description', e.target.value)}
-            className="w-full bg-transparent border border-gray-200 rounded p-3 outline-none focus:border-amazon-orange resize-none"
-            style={{ fontSize: '15px', color: '#0F1111', lineHeight: '20px', fontWeight: '400' }}
-            rows={4}
+            onInput={(e) => {
+              e.target.style.height = 'auto';
+              e.target.style.height = e.target.scrollHeight + 'px';
+            }}
+            className="w-full bg-transparent border border-gray-200 rounded p-3 outline-none focus:border-amazon-orange resize-none overflow-hidden"
+            style={{ fontSize: '15px', color: '#0F1111', lineHeight: '20px', fontWeight: '400', minHeight: '80px' }}
           />
         </div>
 
