@@ -6,6 +6,7 @@ import { CSS } from '@dnd-kit/utilities';
 
 // Sortable What's Included Item
 const SortableIncludedItem = ({ item, data, onUpdate }) => {
+  const textareaRef = React.useRef(null);
   const {
     attributes,
     listeners,
@@ -19,6 +20,13 @@ const SortableIncludedItem = ({ item, data, onUpdate }) => {
     transform: CSS.Transform.toString(transform),
     transition,
   };
+
+  React.useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
+    }
+  }, [item.description]);
 
   return (
     <div ref={setNodeRef} style={style} className="group grid grid-cols-[200px_1fr] border-b border-gray-200 last:border-b-0 relative">
@@ -51,6 +59,7 @@ const SortableIncludedItem = ({ item, data, onUpdate }) => {
       </div>
       <div className="p-3 relative z-10">
         <textarea
+          ref={textareaRef}
           value={item.description}
           onChange={(e) => {
             const updatedIncluded = data.sections.included.map(includedItem =>
@@ -58,10 +67,13 @@ const SortableIncludedItem = ({ item, data, onUpdate }) => {
             );
             onUpdate({ sections: { ...data.sections, included: updatedIncluded } });
           }}
-          className="w-full bg-transparent border-none outline-none resize-none"
-          style={{ fontSize: '14px', fontWeight: '400', color: '#0F1111', lineHeight: '20px', paddingRight: '60px' }}
+          onInput={(e) => {
+            e.target.style.height = 'auto';
+            e.target.style.height = e.target.scrollHeight + 'px';
+          }}
+          className="w-full bg-transparent border-none outline-none resize-none overflow-hidden"
+          style={{ fontSize: '14px', fontWeight: '400', color: '#0F1111', lineHeight: '20px', paddingRight: '60px', minHeight: '40px' }}
           placeholder="Lorem ipsum dolor sit amet consectetur"
-          rows={2}
         />
         {/* Action Icons - Right Side */}
         <div className="absolute top-2 right-2 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20">
@@ -212,6 +224,9 @@ const SortableProgramForItem = ({ item, index, data, onUpdate }) => {
 
 const ProductSection = ({ data, onUpdate, onImageUpload }) => {
   const [selectedThumbnail, setSelectedThumbnail] = useState(0);
+  const [showThumbnailModal, setShowThumbnailModal] = useState(false);
+  const [showPriceTextDropdown, setShowPriceTextDropdown] = useState(false);
+  const [priceText, setPriceText] = useState(data.priceText || 'typical copay, may vary based on insurance coverage.');
 
   // Hero image dropzone
   const { getRootProps: getHeroRootProps, getInputProps: getHeroInputProps } = useDropzone({
@@ -242,7 +257,9 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
       if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
+          // Upload the full-resolution image, it will be displayed scaled down via CSS
           onImageUpload(e.target.result, 'thumbnail');
+          setShowThumbnailModal(false);
         };
         reader.readAsDataURL(file);
       }
@@ -260,34 +277,42 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
         <div className="flex-shrink-0 w-[352px]">
         {/* Main Product Image */}
         <div className="main-image-container mb-4">
-          <div 
-            {...getHeroRootProps()} 
-            className="relative group cursor-pointer border-2 border-dashed border-gray-300 hover:border-amazon-orange rounded-lg transition-colors"
-            style={{ width: '352px', height: '470px' }}
-          >
-            <input {...getHeroInputProps()} />
-            {data.images?.hero ? (
+          {data.images?.hero ? (
+            <div className="relative group" style={{ width: '352px', height: '470px' }}>
               <img
                 src={data.images.hero}
                 alt="Main Product"
-                className="object-cover border border-amazon-border-light rounded"
+                className="object-cover rounded-lg"
                 style={{ width: '352px', height: '470px' }}
               />
-            ) : (
-              <div className="flex items-center justify-center bg-gray-50 border border-amazon-border-light rounded" style={{ width: '352px', height: '470px' }}>
-                <div className="text-center">
-                  <PhotoIcon className="w-16 h-16 text-gray-400 mx-auto mb-2" />
-                  <p className="text-gray-500 text-sm">Drop image here or click to upload</p>
-                  <p className="text-gray-400 text-xs mt-1">Main product image</p>
-                </div>
-              </div>
-            )}
-            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all rounded flex items-center justify-center">
-              <div className="opacity-0 group-hover:opacity-100 bg-black bg-opacity-70 text-white px-3 py-1 rounded text-sm transition-opacity">
-                {data.images?.hero ? 'Change Image' : 'Upload Image'}
+              <button
+                onClick={() => onUpdate({ images: { ...data.images, hero: null } })}
+                className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <XMarkIcon className="w-4 h-4 text-gray-600" />
+              </button>
+            </div>
+          ) : (
+            <div 
+              {...getHeroRootProps()} 
+              className="cursor-pointer border-2 border-dashed rounded-lg transition-colors flex items-center justify-center bg-gray-50"
+              style={{ width: '352px', height: '470px', borderColor: '#D5D9D9' }}
+            >
+              <input {...getHeroInputProps()} />
+              <div className="text-center">
+                <PhotoIcon className="w-12 h-12 mx-auto mb-3" style={{ color: '#8B96A5' }} />
+                <p style={{ fontFamily: 'Amazon Ember', fontSize: '14px', fontWeight: '400', color: '#565959', marginBottom: '4px' }}>
+                  Drop image or click to upload
+                </p>
+                <p style={{ fontFamily: 'Amazon Ember', fontSize: '12px', fontWeight: '400', color: '#8B96A5' }}>
+                  352x470px recommended
+                </p>
+                <p style={{ fontFamily: 'Amazon Ember', fontSize: '11px', fontWeight: '400', color: '#8B96A5', marginTop: '8px' }}>
+                  Use 2x resolution (704x940px) for high DPI screens
+                </p>
               </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Thumbnail Images */}
@@ -295,27 +320,119 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
           {data.images?.thumbnails?.map((thumb, index) => (
             <div
               key={index}
-              className={`cursor-pointer ${selectedThumbnail === index ? 'ring-2 ring-amazon-orange' : ''}`}
-              onClick={() => setSelectedThumbnail(index)}
+              className={`relative group ${selectedThumbnail === index ? 'ring-2 ring-amazon-orange' : ''}`}
+              style={{ width: '42px', height: '56px' }}
             >
               <img
                 src={thumb}
                 alt={`Thumbnail ${index + 1}`}
-                className="w-16 h-16 object-cover border border-amazon-border-light rounded hover:border-amazon-orange"
+                className="object-cover border border-amazon-border-light rounded hover:border-amazon-orange cursor-pointer"
+                style={{ width: '42px', height: '56px' }}
+                onClick={() => setSelectedThumbnail(index)}
               />
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const newThumbnails = data.images.thumbnails.filter((_, i) => i !== index);
+                  onUpdate({ images: { ...data.images, thumbnails: newThumbnails } });
+                }}
+                className="absolute -top-1 -right-1 p-1 bg-white rounded-full shadow-lg hover:bg-gray-100 opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <XMarkIcon className="w-3 h-3 text-gray-600" />
+              </button>
             </div>
           ))}
           
           {/* Add Thumbnail Button */}
           <div
-            {...getThumbRootProps()}
-            className="w-16 h-16 border-2 border-dashed border-gray-300 hover:border-amazon-orange rounded flex items-center justify-center cursor-pointer transition-colors"
+            onClick={() => setShowThumbnailModal(true)}
+            className="border-2 border-dashed rounded flex items-center justify-center cursor-pointer transition-colors"
+            style={{ width: '42px', height: '56px', borderColor: '#D5D9D9', backgroundColor: '#F7F7F7' }}
           >
-            <input {...getThumbInputProps()} />
-            <PlusIcon className="w-6 h-6 text-gray-400 hover:text-amazon-orange" />
+            <PlusIcon className="w-6 h-6" style={{ color: '#8B96A5' }} />
           </div>
         </div>
         </div>
+
+        {/* Thumbnail Upload Modal */}
+        {showThumbnailModal && (
+          <div 
+            className="fixed inset-0 z-50 flex items-center justify-center"
+            style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+            onClick={() => setShowThumbnailModal(false)}
+          >
+            <div
+              className="relative"
+              style={{
+                backgroundColor: 'rgba(255, 255, 255, 0.33)',
+                backdropFilter: 'blur(10px)',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                padding: '32px',
+                maxWidth: '400px',
+                width: '90%',
+                borderRadius: '24px'
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setShowThumbnailModal(false)}
+                className="absolute top-4 right-4 p-2 rounded-full transition-all"
+                style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                  backdropFilter: 'blur(5px)'
+                }}
+              >
+                <XMarkIcon className="w-5 h-5" style={{ color: '#565959' }} />
+              </button>
+
+              <h3 style={{ 
+                fontFamily: 'Amazon Ember', 
+                fontSize: '18px', 
+                fontWeight: '700', 
+                color: '#0F1111', 
+                marginBottom: '16px',
+                textAlign: 'center'
+              }}>
+                Add Product Image
+              </h3>
+
+              <p style={{ 
+                fontFamily: 'Amazon Ember', 
+                fontSize: '13px', 
+                fontWeight: '400', 
+                color: '#565959', 
+                marginBottom: '24px',
+                textAlign: 'center',
+                lineHeight: '18px'
+              }}>
+                Upload the full-size image. It will be automatically<br />scaled to create a thumbnail.
+              </p>
+
+              {/* Upload Zone */}
+              <div 
+                {...getThumbRootProps()} 
+                className="cursor-pointer border-2 border-dashed rounded-lg transition-colors flex items-center justify-center"
+                style={{ height: '250px', borderColor: '#D5D9D9', backgroundColor: 'rgba(247, 247, 247, 0.8)' }}
+              >
+                <input {...getThumbInputProps()} />
+                <div className="text-center">
+                  <PhotoIcon className="w-12 h-12 mx-auto mb-3" style={{ color: '#8B96A5' }} />
+                  <p style={{ fontFamily: 'Amazon Ember', fontSize: '14px', fontWeight: '400', color: '#565959', marginBottom: '4px' }}>
+                    Drop image or click to upload
+                  </p>
+                  <p style={{ fontFamily: 'Amazon Ember', fontSize: '12px', fontWeight: '400', color: '#8B96A5' }}>
+                    352x470px recommended
+                  </p>
+                  <p style={{ fontFamily: 'Amazon Ember', fontSize: '11px', fontWeight: '400', color: '#8B96A5', marginTop: '8px' }}>
+                    Use 2x resolution (704x940px) for high DPI screens
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Center Column - Main Content */}
         <div className="flex-1">
@@ -464,13 +581,131 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
                 style={{ fontSize: '13px', color: '#0F1111', width: '25px', lineHeight: '1', padding: '0', marginLeft: '0', position: 'relative', top: '-8px', fontWeight: '400' }}
               />
             </div>
-            <div style={{ fontSize: '14px', color: '#565959', lineHeight: '20px' }}>
-              <input
-                type="text"
-                defaultValue="typical copay, may vary based on insurance coverage."
-                className="w-full bg-transparent border-none outline-none"
-                style={{ fontSize: '14px', color: '#565959', padding: '0', lineHeight: '20px' }}
-              />
+            <div 
+              className="relative"
+              style={{ fontSize: '14px', color: '#565959', lineHeight: '20px' }}
+            >
+              <div 
+                className="cursor-pointer transition-colors"
+                onMouseEnter={() => setShowPriceTextDropdown(true)}
+                onMouseLeave={() => setShowPriceTextDropdown(false)}
+                style={{ 
+                  fontSize: '14px', 
+                  color: showPriceTextDropdown ? '#0F1111' : '#565959', 
+                  lineHeight: '20px',
+                  fontWeight: showPriceTextDropdown ? '500' : '400'
+                }}
+              >
+                {priceText}
+              </div>
+              
+              {/* Dropdown Menu */}
+              {showPriceTextDropdown && (
+                <div 
+                  className="absolute z-50 transition-all duration-200"
+                  onMouseEnter={() => setShowPriceTextDropdown(true)}
+                  onMouseLeave={() => setShowPriceTextDropdown(false)}
+                  style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.33)',
+                    backdropFilter: 'blur(10px)',
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
+                    border: '1px solid rgba(255, 255, 255, 0.25)',
+                    borderRadius: '12px',
+                    minWidth: '320px',
+                    left: '0',
+                    top: 'calc(100% + 8px)',
+                    padding: '8px'
+                  }}
+                >
+                  <div
+                    onClick={() => {
+                      setPriceText('typical copay, may vary based on insurance coverage.');
+                      onUpdate({ priceText: 'typical copay, may vary based on insurance coverage.' });
+                      setShowPriceTextDropdown(false);
+                    }}
+                    className="cursor-pointer transition-all duration-150"
+                    style={{ 
+                      fontSize: '14px', 
+                      color: '#0F1111', 
+                      lineHeight: '20px',
+                      padding: '12px 16px',
+                      borderRadius: '8px',
+                      backgroundColor: priceText === 'typical copay, may vary based on insurance coverage.' ? 'rgba(255, 255, 255, 0.5)' : 'transparent',
+                      fontWeight: priceText === 'typical copay, may vary based on insurance coverage.' ? '500' : '400'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (priceText !== 'typical copay, may vary based on insurance coverage.') {
+                        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (priceText !== 'typical copay, may vary based on insurance coverage.') {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                      }
+                    }}
+                  >
+                    typical copay, may vary based on insurance coverage.
+                  </div>
+                  <div
+                    onClick={() => {
+                      setPriceText('with covered insurance or employer benefits.');
+                      onUpdate({ priceText: 'with covered insurance or employer benefits.' });
+                      setShowPriceTextDropdown(false);
+                    }}
+                    className="cursor-pointer transition-all duration-150"
+                    style={{ 
+                      fontSize: '14px', 
+                      color: '#0F1111', 
+                      lineHeight: '20px',
+                      padding: '12px 16px',
+                      borderRadius: '8px',
+                      backgroundColor: priceText === 'with covered insurance or employer benefits.' ? 'rgba(255, 255, 255, 0.5)' : 'transparent',
+                      fontWeight: priceText === 'with covered insurance or employer benefits.' ? '500' : '400'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (priceText !== 'with covered insurance or employer benefits.') {
+                        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (priceText !== 'with covered insurance or employer benefits.') {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                      }
+                    }}
+                  >
+                    with covered insurance or employer benefits.
+                  </div>
+                  <div
+                    onClick={() => {
+                      setPriceText('for 1:1 support. Fees apply for additional medical services.');
+                      onUpdate({ priceText: 'for 1:1 support. Fees apply for additional medical services.' });
+                      setShowPriceTextDropdown(false);
+                    }}
+                    className="cursor-pointer transition-all duration-150"
+                    style={{ 
+                      fontSize: '14px', 
+                      color: '#0F1111', 
+                      lineHeight: '20px',
+                      padding: '12px 16px',
+                      borderRadius: '8px',
+                      backgroundColor: priceText === 'for 1:1 support. Fees apply for additional medical services.' ? 'rgba(255, 255, 255, 0.5)' : 'transparent',
+                      fontWeight: priceText === 'for 1:1 support. Fees apply for additional medical services.' ? '500' : '400'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (priceText !== 'for 1:1 support. Fees apply for additional medical services.') {
+                        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (priceText !== 'for 1:1 support. Fees apply for additional medical services.') {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                      }
+                    }}
+                  >
+                    for 1:1 support. Fees apply for additional medical services.
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

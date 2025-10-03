@@ -5,14 +5,58 @@ import {
   FolderOpenIcon, 
   PrinterIcon,
   ArrowPathIcon,
-  XMarkIcon
+  XMarkIcon,
+  EyeIcon
 } from '@heroicons/react/24/outline';
 
-const ControlPanel = ({ onSave, onLoad, onExportPDF, onExportHTML, isLoading }) => {
+const ControlPanel = ({ onSave, onLoad, onExportPDF, onExportHTML, isLoading, xrayMode, onToggleXray }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <>
+      {/* X-Ray Mode Toggle */}
+      <motion.div
+        onClick={onToggleXray}
+        whileHover={{ 
+          scale: 1.03,
+          y: -2,
+        }}
+        className="fixed z-50 cursor-pointer"
+        style={{
+          bottom: '32px',
+          right: '224px',
+        }}
+      >
+        <div
+          style={{
+            width: 48,
+            height: 48,
+            borderRadius: 24,
+            backdropFilter: 'blur(20px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+            background: xrayMode
+              ? 'linear-gradient(135deg, rgba(142, 68, 173, 0.88) 0%, rgba(155, 89, 182, 0.85) 50%, rgba(168, 105, 191, 0.88) 100%)'
+              : 'linear-gradient(135deg, rgba(245, 245, 250, 0.35) 0%, rgba(240, 242, 255, 0.31) 50%, rgba(243, 243, 250, 0.33) 100%)',
+            border: xrayMode ? '2px solid rgba(255, 255, 255, 0.4)' : '2px solid rgba(200, 200, 220, 0.5)',
+            boxShadow: xrayMode
+              ? '0 12px 40px rgba(142, 68, 173, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3)'
+              : '0 8px 24px rgba(0, 0, 0, 0.1), inset 0 2px 4px rgba(255, 255, 255, 0.7)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'all 0.3s ease'
+          }}
+        >
+          <EyeIcon 
+            className="w-6 h-6" 
+            style={{ 
+              color: xrayMode ? 'white' : '#8E44AD',
+              transition: 'color 0.3s ease'
+            }} 
+          />
+        </div>
+      </motion.div>
+
       <div 
         className="fixed z-50"
         style={{

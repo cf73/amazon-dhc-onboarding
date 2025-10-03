@@ -5,6 +5,7 @@ import AmazonHeader from './components/AmazonHeader';
 import ProductSection from './components/ProductSection';
 import ContentSection from './components/ContentSection';
 import ControlPanel from './components/ControlPanel';
+import Footer from './components/Footer';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { exportToPDF, exportToHTML } from './utils/exportUtils';
 import './styles/compiled.css';
@@ -150,6 +151,7 @@ function App() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState(null);
+  const [xrayMode, setXrayMode] = useState(false);
 
   // Configure sensors for drag and drop
   const sensors = useSensors(
@@ -307,6 +309,19 @@ function App() {
       }
       return;
     }
+
+    // Handle footnote items
+    if (activeId.startsWith('footnote-')) {
+      const footnotes = [...(projectData.sections.aboutFay?.footnotes || [])];
+      const oldIndex = footnotes.findIndex(item => `footnote-${item.id}` === activeId);
+      const newIndex = footnotes.findIndex(item => `footnote-${item.id}` === overId);
+      
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const newFootnotes = arrayMove(footnotes, oldIndex, newIndex);
+        updateSection('aboutFay', { ...projectData.sections.aboutFay, footnotes: newFootnotes });
+      }
+      return;
+    }
   };
 
   // Export functions
@@ -411,7 +426,19 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className={`min-h-screen bg-white ${xrayMode ? 'xray-mode' : ''}`}>
+      <style>{`
+        .xray-mode input[type="text"]:not([readonly]),
+        .xray-mode textarea:not([readonly]) {
+          outline: 2px dashed #8E44AD !important;
+          outline-offset: 2px;
+          color: #8E44AD !important;
+        }
+        .xray-mode input[type="text"]:not([readonly]):focus,
+        .xray-mode textarea:not([readonly]):focus {
+          outline: 2px solid #8E44AD !important;
+        }
+      `}</style>
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         {/* Amazon Header */}
         <AmazonHeader />
@@ -441,6 +468,12 @@ function App() {
             sections={projectData.sections}
             onUpdateSection={updateSection}
           />
+
+          {/* Footer */}
+          <Footer 
+            data={projectData.footer}
+            onUpdate={(footerData) => updateProjectData({ footer: footerData })}
+          />
         </main>
 
         {/* Control Panel */}
@@ -450,6 +483,8 @@ function App() {
           onExportPDF={handleExportPDF}
           onExportHTML={handleExportHTML}
           isLoading={isLoading}
+          xrayMode={xrayMode}
+          onToggleXray={() => setXrayMode(!xrayMode)}
         />
 
         {/* Notification */}

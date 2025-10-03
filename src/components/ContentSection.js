@@ -7,6 +7,107 @@ import { v4 as uuidv4 } from 'uuid';
 import quoteMarks from '../assets/quotemarks.png';
 import jadeCheckmark from '../assets/jade-checkmark-transparent.png';
 
+// Sortable Footnote Item
+const SortableFootnote = ({ item, sections, onUpdateSection }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: `footnote-${item.id}` });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div 
+      ref={setNodeRef} 
+      style={style} 
+      className="group relative"
+    >
+      {/* Content Row with Glass Effect on Hover */}
+      <div
+        className="flex items-center gap-2 transition-all duration-200 relative"
+        style={{
+          backgroundColor: isDragging ? 'rgba(255, 255, 255, 0.67)' : 'transparent',
+          backdropFilter: isDragging ? 'blur(10px)' : 'none',
+          boxShadow: isDragging ? '0 2px 12px rgba(0,0,0,0.1)' : 'none',
+          border: isDragging ? '1px solid rgba(0, 0, 0, 0.05)' : '1px solid transparent',
+          borderRadius: '4px',
+          paddingTop: '2px',
+          paddingBottom: '2px',
+          paddingRight: '60px'
+        }}
+      >
+        <div className="flex-1">
+          <input
+            type="text"
+            value={item.text}
+            onChange={(e) => {
+              const updatedFootnotes = sections.aboutFay?.footnotes?.map(fn =>
+                fn.id === item.id ? { ...fn, text: e.target.value } : fn
+              );
+              onUpdateSection('aboutFay', { 
+                ...sections.aboutFay, 
+                footnotes: updatedFootnotes 
+              });
+            }}
+            className="w-full bg-transparent border-none outline-none cursor-text"
+            style={{ 
+              fontFamily: 'Amazon Ember', 
+              fontSize: '12px', 
+              fontWeight: '400', 
+              color: '#565959', 
+              lineHeight: '16px'
+            }}
+            placeholder="* Footnote text..."
+          />
+        </div>
+        
+        {/* Action Icons - Right Side */}
+        <div className="absolute top-0 right-0 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20" style={{ height: '100%', alignItems: 'center' }}>
+          {/* Drag Handle */}
+          <div
+            {...listeners}
+            {...attributes}
+            style={{ cursor: 'grab', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="5" cy="4" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="11" cy="4" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="5" cy="8" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="11" cy="8" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="5" cy="12" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="11" cy="12" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+            </svg>
+          </div>
+          {/* Delete Button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              const updatedFootnotes = sections.aboutFay?.footnotes?.filter(fn => fn.id !== item.id);
+              onUpdateSection('aboutFay', { 
+                ...sections.aboutFay, 
+                footnotes: updatedFootnotes 
+              });
+            }}
+            style={{ cursor: 'pointer', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', padding: 0 }}
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="8" cy="8" r="7" fill="rgba(220, 38, 38, 0.1)" />
+              <path d="M10.5 5.5L5.5 10.5M5.5 5.5L10.5 10.5" stroke="rgba(220, 38, 38, 0.8)" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // Sortable Testimonial Component
 const SortableTestimonial = ({ item, updateItem, removeItem, textareaRefs }) => {
   const {
@@ -260,9 +361,16 @@ const SortableExpectItem = ({ item, index, sections, onUpdateSection }) => {
             >
               <input {...getImageInputProps()} />
               <div className="text-center">
-                <PhotoIcon className="w-12 h-12 mx-auto mb-2 text-gray-400" />
-                <p className="text-sm text-gray-500">Drop image or click to upload</p>
-                <p className="text-xs text-gray-400 mt-1">350x250px recommended</p>
+                <PhotoIcon className="w-12 h-12 mx-auto mb-3" style={{ color: '#8B96A5' }} />
+                <p style={{ fontFamily: 'Amazon Ember', fontSize: '14px', fontWeight: '400', color: '#565959', marginBottom: '4px' }}>
+                  Drop image or click to upload
+                </p>
+                <p style={{ fontFamily: 'Amazon Ember', fontSize: '12px', fontWeight: '400', color: '#8B96A5' }}>
+                  350x250px recommended
+                </p>
+                <p style={{ fontFamily: 'Amazon Ember', fontSize: '11px', fontWeight: '400', color: '#8B96A5', marginTop: '8px' }}>
+                  Use 2x resolution (700x500px) for high DPI screens
+                </p>
               </div>
             </div>
           )}
@@ -622,35 +730,51 @@ const ContentSection = ({ sections, onUpdateSection }) => {
           {/* Left Column - Image */}
           <div className="relative">
             {sections.fromBrand?.image ? (
-              <img
-                src={sections.fromBrand.image}
-                alt="Brand content"
-                className="object-cover rounded-lg"
-                style={{ width: '555px', height: '312px' }}
-              />
+              <div className="relative group" style={{ width: '555px', height: '312px' }}>
+                <img
+                  src={sections.fromBrand.image}
+                  alt="Brand content"
+                  className="object-cover rounded-lg"
+                  style={{ width: '555px', height: '312px' }}
+                />
+                <button
+                  onClick={() => onUpdateSection('fromBrand', { ...sections.fromBrand, image: null })}
+                  className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <XMarkIcon className="w-4 h-4 text-gray-600" />
+                </button>
+              </div>
             ) : (
-              <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center" style={{ width: '555px', height: '312px' }}>
+              <div className="relative cursor-pointer border-2 border-dashed rounded-lg transition-colors flex items-center justify-center bg-gray-50" style={{ width: '555px', height: '312px', borderColor: '#D5D9D9' }}>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                        onUpdateSection('fromBrand', { ...sections.fromBrand, image: event.target.result });
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
                 <div className="text-center">
-                  <PhotoIcon className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                  <p className="text-gray-500 text-sm">Upload brand image</p>
+                  <PhotoIcon className="w-12 h-12 mx-auto mb-3" style={{ color: '#8B96A5' }} />
+                  <p style={{ fontFamily: 'Amazon Ember', fontSize: '14px', fontWeight: '400', color: '#565959', marginBottom: '4px' }}>
+                    Drop image or click to upload
+                  </p>
+                  <p style={{ fontFamily: 'Amazon Ember', fontSize: '12px', fontWeight: '400', color: '#8B96A5' }}>
+                    555x312px recommended
+                  </p>
+                  <p style={{ fontFamily: 'Amazon Ember', fontSize: '11px', fontWeight: '400', color: '#8B96A5', marginTop: '8px' }}>
+                    Use 2x resolution (1110x624px) for high DPI screens
+                  </p>
                 </div>
               </div>
             )}
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files[0];
-                if (file) {
-                  const reader = new FileReader();
-                  reader.onload = (event) => {
-                    onUpdateSection('fromBrand', { ...sections.fromBrand, image: event.target.result });
-                  };
-                  reader.readAsDataURL(file);
-                }
-              }}
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-            />
           </div>
 
           {/* Right Column - Content */}
@@ -964,44 +1088,56 @@ const ContentSection = ({ sections, onUpdateSection }) => {
           {/* Editable Logo */}
           <div className="flex-shrink-0">
             {sections.aboutFay?.logo ? (
-              <div className="relative group">
-                <img 
-                  src={sections.aboutFay.logo} 
-                  alt="Logo" 
-                  style={{ width: '120px', height: '40px', objectFit: 'contain' }}
-                />
-                <button
-                  onClick={() => {
-                    onUpdateSection('aboutFay', { ...sections.aboutFay, logo: null });
-                  }}
-                  className="absolute -top-2 -right-2 p-1 bg-white rounded-full shadow-lg hover:bg-gray-100 opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <XMarkIcon className="w-3 h-3 text-gray-600" />
-                </button>
+              <div>
+                <div className="relative group">
+                  <img 
+                    src={sections.aboutFay.logo} 
+                    alt="Logo" 
+                    style={{ width: '120px', height: '40px', objectFit: 'contain' }}
+                  />
+                  <button
+                    onClick={() => {
+                      onUpdateSection('aboutFay', { ...sections.aboutFay, logo: null });
+                    }}
+                    className="absolute -top-2 -right-2 p-1 bg-white rounded-full shadow-lg hover:bg-gray-100 opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <XMarkIcon className="w-3 h-3 text-gray-600" />
+                  </button>
+                </div>
+                <p style={{ fontFamily: 'Amazon Ember', fontSize: '10px', fontWeight: '400', color: '#8B96A5', marginTop: '4px' }}>
+                  120x40px • Use 2x (240x80px) for high DPI
+                </p>
               </div>
             ) : (
-              <div
-                onClick={() => {
-                  const input = document.createElement('input');
-                  input.type = 'file';
-                  input.accept = 'image/*';
-                  input.onchange = (e) => {
-                    const file = e.target.files[0];
-                    const reader = new FileReader();
-                    reader.onload = () => {
-                      onUpdateSection('aboutFay', { 
-                        ...sections.aboutFay, 
-                        logo: reader.result 
-                      });
+              <div className="relative">
+                <div
+                  onClick={() => {
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = 'image/*';
+                    input.onchange = (e) => {
+                      const file = e.target.files[0];
+                      const reader = new FileReader();
+                      reader.onload = () => {
+                        onUpdateSection('aboutFay', { 
+                          ...sections.aboutFay, 
+                          logo: reader.result 
+                        });
+                      };
+                      reader.readAsDataURL(file);
                     };
-                    reader.readAsDataURL(file);
-                  };
-                  input.click();
-                }}
-                className="cursor-pointer border-2 border-dashed border-gray-300 rounded flex items-center justify-center hover:border-amazon-orange transition-colors"
-                style={{ width: '120px', height: '40px' }}
-              >
-                <PhotoIcon className="w-5 h-5 text-gray-400" />
+                    input.click();
+                  }}
+                  className="cursor-pointer border-2 border-dashed rounded flex items-center justify-center transition-colors bg-gray-50"
+                  style={{ width: '120px', height: '40px', borderColor: '#D5D9D9' }}
+                >
+                  <div className="text-center">
+                    <PhotoIcon className="w-6 h-6 mx-auto" style={{ color: '#8B96A5' }} />
+                  </div>
+                </div>
+                <p style={{ fontFamily: 'Amazon Ember', fontSize: '10px', fontWeight: '400', color: '#8B96A5', marginTop: '4px' }}>
+                  120x40px • Use 2x (240x80px) for high DPI
+                </p>
               </div>
             )}
           </div>
@@ -1066,45 +1202,52 @@ const ContentSection = ({ sections, onUpdateSection }) => {
 
         {/* Footer Notes */}
         <div className="mt-8 space-y-2" style={{ fontSize: '12px', color: '#565959', lineHeight: '16px' }}>
-          <input
-            type="text"
-            value={sections.aboutFay?.footnote1 || '* Eligibility is based on application and acceptance into the program.'}
-            onChange={(e) => {
+          <SortableContext
+            items={(sections.aboutFay?.footnotes || []).length > 0 
+              ? sections.aboutFay.footnotes.map(fn => `footnote-${fn.id}`)
+              : ['footnote-1', 'footnote-2', 'footnote-3']
+            }
+            strategy={verticalListSortingStrategy}
+          >
+            {(sections.aboutFay?.footnotes && sections.aboutFay.footnotes.length > 0 
+              ? sections.aboutFay.footnotes 
+              : [
+                  { id: '1', text: '* Lorem ipsum dolor sit amet consectetur adipiscing elit.' },
+                  { id: '2', text: '† Lorem ipsum dolor sit amet consectetur adipiscing (n = 167)' },
+                  { id: '3', text: '‡ Lorem ipsum dolor sit amet (Date Range: 01/01/25 — 06/30/25)' }
+                ]
+            ).map((item) => (
+              <SortableFootnote
+                key={`footnote-${item.id}`}
+                item={item}
+                sections={sections}
+                onUpdateSection={onUpdateSection}
+              />
+            ))}
+          </SortableContext>
+          
+          <button
+            onClick={() => {
+              const currentFootnotes = sections.aboutFay?.footnotes || [
+                { id: '1', text: '* Lorem ipsum dolor sit amet consectetur adipiscing elit.' },
+                { id: '2', text: '† Lorem ipsum dolor sit amet consectetur adipiscing (n = 167)' },
+                { id: '3', text: '‡ Lorem ipsum dolor sit amet (Date Range: 01/01/25 — 06/30/25)' }
+              ];
+              const newFootnote = {
+                id: uuidv4(),
+                text: '* New footnote text...'
+              };
               onUpdateSection('aboutFay', { 
                 ...sections.aboutFay, 
-                footnote1: e.target.value 
+                footnotes: [...currentFootnotes, newFootnote] 
               });
             }}
-            className="w-full bg-transparent border-none outline-none"
-            style={{ fontFamily: 'Amazon Ember', fontSize: '12px', fontWeight: '400', color: '#565959', lineHeight: '16px' }}
-            placeholder="* Footnote 1"
-          />
-          <input
-            type="text"
-            value={sections.aboutFay?.footnote2 || '† Internal Fay Client Survey, March 2023 (n = 167)'}
-            onChange={(e) => {
-              onUpdateSection('aboutFay', { 
-                ...sections.aboutFay, 
-                footnote2: e.target.value 
-              });
-            }}
-            className="w-full bg-transparent border-none outline-none"
-            style={{ fontFamily: 'Amazon Ember', fontSize: '12px', fontWeight: '400', color: '#565959', lineHeight: '16px' }}
-            placeholder="† Footnote 2"
-          />
-          <input
-            type="text"
-            value={sections.aboutFay?.footnote3 || '‡ Source: Internal Claims Processing (Date Range: 01/01/25 — 06/30/25)'}
-            onChange={(e) => {
-              onUpdateSection('aboutFay', { 
-                ...sections.aboutFay, 
-                footnote3: e.target.value 
-              });
-            }}
-            className="w-full bg-transparent border-none outline-none"
-            style={{ fontFamily: 'Amazon Ember', fontSize: '12px', fontWeight: '400', color: '#565959', lineHeight: '16px' }}
-            placeholder="‡ Footnote 3"
-          />
+            className="flex items-center gap-2 text-amazon-orange hover:text-amazon-orange-dark"
+            style={{ fontFamily: 'Amazon Ember', fontSize: '13px', fontWeight: '400', marginTop: '8px' }}
+          >
+            <PlusIcon className="w-4 h-4" />
+            Add Footnote
+          </button>
         </div>
       </div>
     </div>
