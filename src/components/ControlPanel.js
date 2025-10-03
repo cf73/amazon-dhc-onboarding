@@ -102,7 +102,7 @@ const ControlPanel = ({ onSave, onLoad, onExportPDF, onExportHTML, isLoading, xr
           onClick={() => !isExpanded && setIsExpanded(true)}
           animate={{
             width: isExpanded ? 384 : 160,
-            height: isExpanded ? 480 : 48,
+            height: isExpanded ? 520 : 48,
           }}
           whileHover={!isExpanded ? { 
             scale: 1.03,
