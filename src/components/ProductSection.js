@@ -46,7 +46,7 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
   };
 
   return (
-    <div style={{ paddingLeft: '60px', paddingRight: '60px', paddingTop: '16px' }}>
+    <div style={{ paddingLeft: '60px', paddingRight: '60px', paddingTop: '32px' }}>
       <div className="flex items-start" style={{ minWidth: '798px', gap: '48px' }}>
         {/* Left Column - Product Images */}
         <div className="flex-shrink-0 w-[352px]">
@@ -116,7 +116,7 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
           value={data.title}
           onChange={(e) => handleInputChange('title', e.target.value)}
           className="w-full bg-transparent border-none outline-none resize-none overflow-hidden"
-          style={{ minHeight: '2.5rem', fontSize: '24px', fontWeight: '400', lineHeight: '32px', color: '#0F1111', marginBottom: '4px' }}
+          style={{ minHeight: '2.5rem', fontSize: '24px', fontWeight: '700', lineHeight: '34px', color: '#0F1111', marginBottom: '4px' }}
           onInput={(e) => {
             e.target.style.height = 'auto';
             e.target.style.height = e.target.scrollHeight + 'px';
@@ -137,23 +137,23 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
 
         {/* Description */}
         <div style={{ marginBottom: '24px' }}>
-          <h3 style={{ fontSize: '16px', color: '#0F1111', fontWeight: '700', marginBottom: '8px' }}>Description</h3>
+          <h3 style={{ fontSize: '18px', color: '#0F1111', fontWeight: '700', marginBottom: '8px' }}>Description</h3>
           <textarea
             value={data.description}
             onChange={(e) => handleInputChange('description', e.target.value)}
             className="w-full bg-transparent border border-gray-200 rounded p-3 outline-none focus:border-amazon-orange resize-none"
-            style={{ fontSize: '14px', color: '#0F1111', lineHeight: '20px', fontWeight: '400' }}
+            style={{ fontSize: '15px', color: '#0F1111', lineHeight: '20px', fontWeight: '400' }}
             rows={4}
           />
         </div>
 
         {/* What's Included Section */}
         <div style={{ marginBottom: '24px' }}>
-          <h3 style={{ fontSize: '16px', color: '#0F1111', fontWeight: '700', marginBottom: '8px' }}>What's included*</h3>
+          <h3 style={{ fontSize: '18px', color: '#0F1111', fontWeight: '700', marginBottom: '8px' }}>What's included*</h3>
           <div className="border border-gray-200 rounded mb-3">
             {data.sections?.included?.map((item, index) => (
               <div key={item.id} className="group grid grid-cols-[200px_1fr] border-b border-gray-200 last:border-b-0">
-                <div className="bg-gray-100 p-3 relative" style={{ fontSize: '14px', fontWeight: '700', color: '#0F1111' }}>
+                <div className="bg-gray-100 p-3 relative" style={{ fontSize: '14px', fontWeight: '400', color: '#0F1111', lineHeight: '20px' }}>
                   <input
                     type="text"
                     value={item.title}
@@ -164,7 +164,7 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
                       onUpdate({ sections: { ...data.sections, included: updatedIncluded } });
                     }}
                     className="w-full bg-transparent border-none outline-none"
-                    style={{ fontSize: '14px', fontWeight: '700', color: '#0F1111' }}
+                    style={{ fontSize: '14px', fontWeight: '400', color: '#0F1111', lineHeight: '20px' }}
                     placeholder="Lorem ipsum dolor"
                   />
                 </div>
@@ -215,78 +215,85 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
 
         {/* Is this program for me? Section */}
         <div style={{ marginBottom: '24px' }}>
-          <h3 style={{ fontSize: '16px', color: '#0F1111', fontWeight: '700', marginBottom: '8px' }}>Is this program for me?</h3>
-          <div className="space-y-3 mb-3">
-            {(data.sections?.programFor || [
-              { id: '1', text: "You're looking to grow your family through assisted reproductive technology (fertility treatment), adoption, or surrogacy" },
-              { id: '2', text: "You're thinking ahead for fertility preservation (sperm and egg freezing)" },
-              { id: '3', text: "You're looking for relief from the financial, emotional, and administrative burden of navigating fertility treatment" }
-            ]).map((item, index) => (
-              <div key={item.id} className="group flex items-start gap-3">
-                <div className="w-5 h-5 rounded-full bg-teal-500 flex items-center justify-center mt-0.5 flex-shrink-0">
-                  <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                </div>
-                <div className="flex-1 relative">
-                  <textarea
-                    value={item.text}
-                    onChange={(e) => {
-                      const currentProgramFor = data.sections?.programFor || [
-                        { id: '1', text: "You're looking to grow your family through assisted reproductive technology (fertility treatment), adoption, or surrogacy" },
-                        { id: '2', text: "You're thinking ahead for fertility preservation (sperm and egg freezing)" },
-                        { id: '3', text: "You're looking for relief from the financial, emotional, and administrative burden of navigating fertility treatment" }
-                      ];
-                      const updatedProgramFor = currentProgramFor.map(programItem =>
-                        programItem.id === item.id ? { ...programItem, text: e.target.value } : programItem
-                      );
-                      onUpdate({ sections: { ...data.sections, programFor: updatedProgramFor } });
-                    }}
-                    className="w-full bg-transparent border-none outline-none resize-none"
-                    style={{ fontSize: '14px', fontWeight: '400', color: '#0F1111', lineHeight: '20px' }}
-                    placeholder="Lorem ipsum dolor sit amet..."
-                    rows={2}
-                  />
-                  <button
-                    onClick={() => {
-                      const currentProgramFor = data.sections?.programFor || [
-                        { id: '1', text: "You're looking to grow your family through assisted reproductive technology (fertility treatment), adoption, or surrogacy" },
-                        { id: '2', text: "You're thinking ahead for fertility preservation (sperm and egg freezing)" },
-                        { id: '3', text: "You're looking for relief from the financial, emotional, and administrative burden of navigating fertility treatment" }
-                      ];
-                      const updatedProgramFor = currentProgramFor.filter(programItem => programItem.id !== item.id);
-                      onUpdate({ sections: { ...data.sections, programFor: updatedProgramFor } });
-                    }}
-                    className="absolute top-1 right-1 p-1 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <XMarkIcon className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-          <button
-            onClick={() => {
-              const currentProgramFor = data.sections?.programFor || [
+          <div style={{ border: '1px solid #D5D9D9', borderRadius: '8px', padding: '20px', marginBottom: '12px' }}>
+            <h3 style={{ fontSize: '16px', color: '#0F1111', fontWeight: '700', lineHeight: '20px', marginBottom: '20px' }}>Is this program for me?</h3>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {(data.sections?.programFor || [
                 { id: '1', text: "You're looking to grow your family through assisted reproductive technology (fertility treatment), adoption, or surrogacy" },
                 { id: '2', text: "You're thinking ahead for fertility preservation (sperm and egg freezing)" },
                 { id: '3', text: "You're looking for relief from the financial, emotional, and administrative burden of navigating fertility treatment" }
-              ];
-              const newItem = {
-                id: Date.now().toString(),
-                text: 'New criteria for program eligibility'
-              };
-              const updatedProgramFor = [...currentProgramFor, newItem];
-              onUpdate({ sections: { ...data.sections, programFor: updatedProgramFor } });
-            }}
-            className="flex items-center gap-2 text-amazon-orange hover:text-amazon-orange-dark mb-3"
-            style={{ fontSize: '13px', fontWeight: '400' }}
-          >
-            <PlusIcon className="w-4 h-4" />
-            Add Criteria
-          </button>
-          <div style={{ marginTop: '16px', fontSize: '12px', color: '#565959', lineHeight: '16px' }}>
-            Progyny services are available to you if covered by your employer benefits and enrolled in an eligible medical plan. Some programs may have additional requirements based on clinical eligibility.
+              ]).map((item, index) => (
+                <div key={item.id} className="group flex" style={{ gap: '12px', marginTop: index === 0 ? '0' : '20px', alignItems: 'flex-start' }}>
+                  <div className="flex-shrink-0" style={{ width: '24px', height: '24px', marginTop: '0px' }}>
+                    <svg width="24" height="24" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12.0498 21.9219C17.0204 21.9219 21.0498 17.8924 21.0498 12.9219C21.0498 7.95131 17.0204 3.92188 12.0498 3.92188C7.07924 3.92188 3.0498 7.95131 3.0498 12.9219C3.0498 17.8924 7.07924 21.9219 12.0498 21.9219Z" stroke="#0F1111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                      <path d="M16 9.92188L10 15.9219L7.5 13.4219" stroke="#159B8E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                    </svg>
+                  </div>
+                  <div className="flex-1 relative" style={{ display: 'flex', alignItems: 'center', minHeight: '24px' }}>
+                    <textarea
+                      value={item.text}
+                      onChange={(e) => {
+                        const currentProgramFor = data.sections?.programFor || [
+                          { id: '1', text: "You're looking to grow your family through assisted reproductive technology (fertility treatment), adoption, or surrogacy" },
+                          { id: '2', text: "You're thinking ahead for fertility preservation (sperm and egg freezing)" },
+                          { id: '3', text: "You're looking for relief from the financial, emotional, and administrative burden of navigating fertility treatment" }
+                        ];
+                        const updatedProgramFor = currentProgramFor.map(programItem =>
+                          programItem.id === item.id ? { ...programItem, text: e.target.value } : programItem
+                        );
+                        onUpdate({ sections: { ...data.sections, programFor: updatedProgramFor } });
+                      }}
+                      onInput={(e) => {
+                        e.target.style.height = 'auto';
+                        e.target.style.height = e.target.scrollHeight + 'px';
+                      }}
+                      className="w-full bg-transparent border-none outline-none resize-none overflow-hidden"
+                      style={{ fontSize: '14px', fontWeight: '400', color: '#0F1111', lineHeight: '20px', padding: '0', minHeight: '20px' }}
+                      placeholder="Lorem ipsum dolor sit amet..."
+                      rows={1}
+                    />
+                    <button
+                      onClick={() => {
+                        const currentProgramFor = data.sections?.programFor || [
+                          { id: '1', text: "You're looking to grow your family through assisted reproductive technology (fertility treatment), adoption, or surrogacy" },
+                          { id: '2', text: "You're thinking ahead for fertility preservation (sperm and egg freezing)" },
+                          { id: '3', text: "You're looking for relief from the financial, emotional, and administrative burden of navigating fertility treatment" }
+                        ];
+                        const updatedProgramFor = currentProgramFor.filter(programItem => programItem.id !== item.id);
+                        onUpdate({ sections: { ...data.sections, programFor: updatedProgramFor } });
+                      }}
+                      className="absolute top-1 right-1 p-1 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <XMarkIcon className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button
+              onClick={() => {
+                const currentProgramFor = data.sections?.programFor || [
+                  { id: '1', text: "You're looking to grow your family through assisted reproductive technology (fertility treatment), adoption, or surrogacy" },
+                  { id: '2', text: "You're thinking ahead for fertility preservation (sperm and egg freezing)" },
+                  { id: '3', text: "You're looking for relief from the financial, emotional, and administrative burden of navigating fertility treatment" }
+                ];
+                const newItem = {
+                  id: Date.now().toString(),
+                  text: 'New criteria for program eligibility'
+                };
+                const updatedProgramFor = [...currentProgramFor, newItem];
+                onUpdate({ sections: { ...data.sections, programFor: updatedProgramFor } });
+              }}
+              className="flex items-center gap-2 text-amazon-orange hover:text-amazon-orange-dark"
+              style={{ fontSize: '13px', fontWeight: '400', marginTop: '16px' }}
+            >
+              <PlusIcon className="w-4 h-4" />
+              Add Criteria
+            </button>
+          </div>
+          <div style={{ fontSize: '14px', color: '#0F1111', lineHeight: '20px' }}>
+            Check your coverage to see if you're covered by your insurance or employer.
           </div>
         </div>
         </div>
@@ -342,7 +349,7 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
               type="text"
               defaultValue="Learn more about coverage and pricing"
               className="w-full bg-transparent border-none outline-none cursor-pointer hover:underline hover:text-red-700"
-              style={{ fontSize: '13px', color: '#007185', padding: '0', lineHeight: '20px', textAlign: 'left' }}
+              style={{ fontSize: '14px', color: '#007185', padding: '0', lineHeight: '20px', textAlign: 'left' }}
             />
           </div>
         </div>

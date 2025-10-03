@@ -1,9 +1,21 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { PlusIcon, XMarkIcon, ChevronDownIcon, PhotoIcon } from '@heroicons/react/24/outline';
 import { v4 as uuidv4 } from 'uuid';
+import quoteMarks from '../assets/quotemarks.png';
 
 const ContentSection = ({ sections, onUpdateSection }) => {
+  const textareaRefs = useRef({});
+
+  useEffect(() => {
+    // Auto-resize all textareas on mount and when content changes
+    Object.values(textareaRefs.current).forEach(textarea => {
+      if (textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+      }
+    });
+  }, [sections.testimonials]);
   
   const addItem = (sectionName, newItem) => {
     const currentItems = sections[sectionName] || [];
@@ -30,20 +42,16 @@ const ContentSection = ({ sections, onUpdateSection }) => {
     <div className="space-y-8 mt-8">
 
       {/* Customer Testimonials Section */}
-      <div className="pt-6 border-t border-amazon-border-light">
-        <h2 className="text-xl font-bold mb-5 text-amazon-text">What customers are saying</h2>
-        
+      <div className="pt-6">
         {/* Header with Quote Icon and Title - Shows Once */}
         <div className="text-center mb-8">
           {/* Large Quote Icon */}
           <div className="flex justify-center mb-6">
-            <svg className="w-12 h-12 text-teal-400" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z"/>
-            </svg>
+            <img src={quoteMarks} alt="Quote marks" className="w-12 h-auto" />
           </div>
 
           {/* Section Title */}
-          <h3 className="text-lg font-semibold text-teal-600 uppercase tracking-wider mb-8 letterspacing-wide">
+          <h3 className="text-center uppercase mb-8" style={{ fontFamily: 'Amazon Ember', fontSize: '20px', fontWeight: '700', lineHeight: '28px', color: '#017E7E' }}>
             What Members Are Saying
           </h3>
         </div>
@@ -71,29 +79,37 @@ const ContentSection = ({ sections, onUpdateSection }) => {
                       </div>
 
                       {/* Testimonial Text */}
-                      <div className="mb-3">
+                      <div>
                         <textarea
-                          value={`"${item.text}"`}
+                          ref={(el) => (textareaRefs.current[item.id] = el)}
+                          value={`\u201C${item.text}\u201D`}
                           onChange={(e) => {
                             let value = e.target.value;
                             // Remove quotes if user adds them, we'll add them automatically
-                            value = value.replace(/^[""]|[""]$/g, '');
+                            value = value.replace(/^[\u201C\u201D"]|[\u201C\u201D"]$/g, '');
                             updateItem('testimonials', item.id, { text: value });
                           }}
-                          className="text-xl text-gray-700 leading-relaxed w-full bg-transparent border-none outline-none resize-none text-center font-light"
+                          onInput={(e) => {
+                            e.target.style.height = 'auto';
+                            e.target.style.height = e.target.scrollHeight + 'px';
+                          }}
+                          className="w-full bg-transparent border-none outline-none resize-none text-center overflow-hidden"
+                          style={{ fontFamily: 'Amazon Ember', fontSize: '20px', fontWeight: '400', lineHeight: '28px', color: '#0F1111', minHeight: '28px', marginBottom: '0' }}
                           placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit..."
-                          rows={4}
+                          rows={1}
                         />
                       </div>
 
                       {/* Author */}
-                      <div className="text-gray-500 text-sm">
+                      <div className="flex items-center justify-center" style={{ fontFamily: 'Amazon Ember', fontSize: '14px', fontWeight: '400', lineHeight: '21px', color: '#565959', gap: '4px' }}>
+                        <span>—</span>
                         <input
                           type="text"
                           value={item.author}
                           onChange={(e) => updateItem('testimonials', item.id, { author: e.target.value })}
-                          className="w-full bg-transparent border-none outline-none text-center"
-                          placeholder="– Lorem Ipsum"
+                          className="bg-transparent border-none outline-none text-center"
+                          style={{ fontFamily: 'Amazon Ember', fontSize: '14px', fontWeight: '400', lineHeight: '21px', color: '#565959' }}
+                          placeholder="Tanya F., Florida"
                         />
                       </div>
 
