@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    font-family: "Amazon Ember", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+}
+
 /* Custom Amazon-specific components */
 @layer components {
   .amazon-header-gradient {
