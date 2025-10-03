@@ -189,7 +189,7 @@ function App() {
         }));
       }
     }
-  }, []); // Only run once on mount
+  }, [projectData.sections.fromBrand.bulletPoints, setProjectData]); // Run when bulletPoints change
 
   // Auto-save functionality
   useEffect(() => {
