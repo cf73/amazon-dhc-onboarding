@@ -282,6 +282,27 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
   return (
     <div style={{ paddingLeft: '60px', paddingRight: '60px', paddingTop: '32px' }}>
       <style>{`
+        /* ============================================
+           RESPONSIVE LAYOUT CONFIGURATION
+           ============================================
+           
+           Standard Tailwind Breakpoints:
+           - sm: 640px
+           - md: 768px
+           - lg: 1024px
+           - xl: 1280px
+           - 2xl: 1536px
+           
+           Buy Box Wrap Breakpoint: xl (1280px)
+           - Above xl: 3 columns side-by-side
+           - Below xl: Buy box wraps to full width below
+           
+           Column Behavior:
+           - Image: Shrinks from 352px → 280px → 240px
+           - Content: Grows/shrinks flexibly (min 300px)
+           - Buy Box: Fixed 350px above xl, full width below
+           ============================================ */
+        
         .product-layout {
           display: flex;
           flex-wrap: wrap;
@@ -289,44 +310,45 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
           gap: 48px;
         }
         
+        /* Image Column - Progressive Shrinking */
         .product-image-column {
-          flex: 0 1 352px;
-          min-width: 200px;
+          flex: 0 1 auto;
+          width: 240px;
+          min-width: 240px;
           max-width: 352px;
         }
         
+        @media (min-width: 768px) { /* md */
+          .product-image-column {
+            width: 280px;
+          }
+        }
+        
+        @media (min-width: 1280px) { /* xl */
+          .product-image-column {
+            width: 352px;
+          }
+        }
+        
+        /* Content Column - Flexible Growth */
         .product-content-column {
-          flex: 1 1 350px;
-          min-width: 250px;
+          flex: 1 1 300px;
+          min-width: 300px;
         }
         
+        /* Buy Box - Wraps at xl breakpoint */
         .buy-box {
-          flex: 1 1 350px;
-          min-width: 280px;
+          flex: 1 1 100%;
+          width: 100%;
+          min-width: 100%;
         }
         
-        @media (min-width: 1200px) {
+        @media (min-width: 1280px) { /* xl - Buy box becomes 3rd column */
           .buy-box {
-            flex: 0 1 350px;
+            flex: 0 0 350px;
+            width: 350px;
+            min-width: 350px;
             max-width: 350px;
-          }
-        }
-        
-        @media (max-width: 1199px) and (min-width: 1100px) {
-          .product-image-column {
-            flex: 0 1 280px;
-          }
-        }
-        
-        @media (max-width: 1099px) and (min-width: 900px) {
-          .product-image-column {
-            flex: 0 1 240px;
-          }
-        }
-        
-        @media (max-width: 899px) {
-          .product-image-column {
-            flex: 0 1 200px;
           }
         }
       `}</style>
