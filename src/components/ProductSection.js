@@ -316,9 +316,9 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
           }
         }
         
-        @media (max-width: 1024px) {
+        @media (max-width: 1100px) {
           .buy-box {
-            flex-basis: 100%;
+            flex: 1 1 100%;
             width: 100%;
             max-width: 100%;
             min-width: 100%;
