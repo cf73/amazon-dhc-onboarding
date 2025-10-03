@@ -291,13 +291,13 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
         
         .product-image-column {
           flex: 0 1 352px;
-          min-width: 240px;
+          min-width: 200px;
           max-width: 352px;
         }
         
         .product-content-column {
-          flex: 1 1 400px;
-          min-width: 280px;
+          flex: 1 1 350px;
+          min-width: 250px;
         }
         
         .buy-box {
@@ -305,16 +305,28 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
           min-width: 280px;
         }
         
-        @media (min-width: 1331px) {
+        @media (min-width: 1200px) {
           .buy-box {
             flex: 0 1 350px;
             max-width: 350px;
           }
         }
         
-        @media (max-width: 1199px) and (min-width: 900px) {
+        @media (max-width: 1199px) and (min-width: 1100px) {
           .product-image-column {
             flex: 0 1 280px;
+          }
+        }
+        
+        @media (max-width: 1099px) and (min-width: 900px) {
+          .product-image-column {
+            flex: 0 1 240px;
+          }
+        }
+        
+        @media (max-width: 899px) {
+          .product-image-column {
+            flex: 0 1 200px;
           }
         }
       `}</style>
