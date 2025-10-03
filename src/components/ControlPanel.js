@@ -77,7 +77,7 @@ const ControlPanel = ({ onSave, onLoad, onExportPDF, onExportHTML, isLoading, xr
             style={{
               left: '50%',
               bottom: '60px',
-              transform: 'translateX(-50%)',
+              transform: 'translateX(-54%)',
               whiteSpace: 'nowrap',
               color: '#8E44AD',
               fontSize: '13px',
