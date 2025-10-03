@@ -423,6 +423,115 @@ const SortableBullet = ({ bullet, bulletIndex, sections, onUpdateSection, jadeCh
   );
 };
 
+// Sortable FAQ Item
+const SortableFAQItem = ({ item, index, sections, updateItem, removeItem, toggleFAQ }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: `faq-${item.id}` });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div ref={setNodeRef} style={{ ...style, marginBottom: index === sections.faq.length - 1 ? '0' : '0' }}>
+      <div
+        className="group relative transition-all duration-200"
+        style={{
+          borderBottom: index === sections.faq.length - 1 ? 'none' : '1px solid #D5D9D9',
+          paddingTop: index === 0 ? '0' : '16px',
+          paddingBottom: '16px',
+          backgroundColor: isDragging ? 'rgba(255, 255, 255, 0.67)' : 'transparent',
+          backdropFilter: isDragging ? 'blur(10px)' : 'none',
+          boxShadow: isDragging ? '0 2px 12px rgba(0,0,0,0.1)' : 'none',
+        }}
+      >
+        <div 
+          className="cursor-pointer"
+          onClick={() => toggleFAQ(item.id)}
+          style={{ paddingRight: '60px' }}
+        >
+          <div className="flex items-center justify-between">
+            <input
+              type="text"
+              value={item.question}
+              onChange={(e) => updateItem('faq', item.id, { question: e.target.value })}
+              className="flex-1 bg-transparent border-none outline-none"
+              style={{ fontFamily: 'Amazon Ember', fontSize: '16px', fontWeight: '600', color: '#232f3e', lineHeight: '24px' }}
+              placeholder="Lorem ipsum dolor sit amet?"
+              onClick={(e) => e.stopPropagation()}
+            />
+            <ChevronDownIcon 
+              className="transition-transform flex-shrink-0"
+              style={{ 
+                width: '20px', 
+                height: '20px', 
+                color: '#0F1111',
+                transform: item.isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                marginLeft: '16px'
+              }} 
+            />
+          </div>
+        </div>
+        {item.isOpen && (
+          <div style={{ paddingTop: '12px', paddingRight: '60px' }}>
+            <textarea
+              value={item.answer}
+              onChange={(e) => updateItem('faq', item.id, { answer: e.target.value })}
+              className="w-full bg-transparent border-none outline-none resize-none overflow-hidden"
+              style={{ fontFamily: 'Amazon Ember', fontSize: '15px', fontWeight: '400', color: '#0F1111', lineHeight: '20px' }}
+              placeholder="Lorem ipsum dolor sit amet consectetur..."
+              rows={3}
+              onInput={(e) => {
+                e.target.style.height = 'auto';
+                e.target.style.height = e.target.scrollHeight + 'px';
+              }}
+            />
+          </div>
+        )}
+        
+        {/* Action Icons - Top Right */}
+        <div className="absolute top-4 right-0 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20">
+          {/* Drag Handle */}
+          <div
+            {...listeners}
+            {...attributes}
+            style={{ cursor: 'grab', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="5" cy="4" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="11" cy="4" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="5" cy="8" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="11" cy="8" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="5" cy="12" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="11" cy="12" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+            </svg>
+          </div>
+          {/* Delete Button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              removeItem('faq', item.id);
+            }}
+            style={{ cursor: 'pointer', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', padding: 0 }}
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="8" cy="8" r="7" fill="rgba(220, 38, 38, 0.1)" />
+              <path d="M10.5 5.5L5.5 10.5M5.5 5.5L10.5 10.5" stroke="rgba(220, 38, 38, 0.8)" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const ContentSection = ({ sections, onUpdateSection }) => {
   const textareaRefs = useRef({});
 
@@ -815,59 +924,34 @@ const ContentSection = ({ sections, onUpdateSection }) => {
       </div>
 
       {/* FAQ Section */}
-      <div className="pt-6 border-t border-amazon-border-light">
-        <h2 className="text-xl font-bold mb-5 text-amazon-text">Frequently Asked Questions</h2>
-        <div className="space-y-4 mb-6">
-          {sections.faq?.map((item) => (
-            <div
-              key={item.id}
-              className="group border border-amazon-border-light rounded-lg overflow-hidden relative"
-            >
-              <div 
-                className="bg-amazon-bg p-4 cursor-pointer hover:bg-gray-100"
-                onClick={() => toggleFAQ(item.id)}
-              >
-                <div className="flex items-center justify-between">
-                  <input
-                    type="text"
-                    value={item.question}
-                    onChange={(e) => updateItem('faq', item.id, { question: e.target.value })}
-                    className="font-medium text-sm text-amazon-text bg-transparent border-none outline-none flex-1 mr-4"
-                    placeholder="Lorem ipsum dolor sit amet?"
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                  <ChevronDownIcon className={`w-4 h-4 text-amazon-text-light transition-transform ${
-                    item.isOpen ? 'rotate-180' : ''
-                  }`} />
-                </div>
-              </div>
-              {item.isOpen && (
-                <div className="p-4 bg-white">
-                  <textarea
-                    value={item.answer}
-                    onChange={(e) => updateItem('faq', item.id, { answer: e.target.value })}
-                    className="text-sm text-amazon-text leading-5 w-full bg-transparent border-none outline-none resize-none"
-                    placeholder="Lorem ipsum dolor sit amet consectetur..."
-                    rows={3}
-                  />
-                </div>
-              )}
-              <button
-                onClick={() => removeItem('faq', item.id)}
-                className="absolute top-2 right-2 p-1 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-              >
-                <XMarkIcon className="w-4 h-4" />
-              </button>
-            </div>
+      <div className="pt-12" style={{ paddingLeft: '60px', paddingRight: '60px' }}>
+        <h2 style={{ fontFamily: 'Amazon Ember', fontSize: '20px', fontWeight: '700', color: '#232f3e', lineHeight: '24px', marginBottom: '24px' }}>
+          Frequently asked questions
+        </h2>
+        <SortableContext
+          items={(sections.faq || []).map(item => `faq-${item.id}`)}
+          strategy={verticalListSortingStrategy}
+        >
+          {(sections.faq || []).map((item, index) => (
+            <SortableFAQItem
+              key={`faq-${item.id}`}
+              item={item}
+              index={index}
+              sections={sections}
+              updateItem={updateItem}
+              removeItem={removeItem}
+              toggleFAQ={toggleFAQ}
+            />
           ))}
-        </div>
+        </SortableContext>
         <button
           onClick={() => addItem('faq', { 
             question: 'New question?', 
             answer: 'Answer to the new question...', 
             isOpen: false 
           })}
-          className="flex items-center gap-2 text-amazon-orange hover:text-amazon-orange-dark font-medium text-sm"
+          className="flex items-center gap-2 text-amazon-orange hover:text-amazon-orange-dark"
+          style={{ fontFamily: 'Amazon Ember', fontSize: '13px', fontWeight: '400', marginTop: '16px' }}
         >
           <PlusIcon className="w-4 h-4" />
           Add FAQ

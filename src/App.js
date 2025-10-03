@@ -294,6 +294,19 @@ function App() {
       }
       return;
     }
+
+    // Handle faq items
+    if (activeId.startsWith('faq-')) {
+      const faqItems = [...(projectData.sections.faq || [])];
+      const oldIndex = faqItems.findIndex(item => `faq-${item.id}` === activeId);
+      const newIndex = faqItems.findIndex(item => `faq-${item.id}` === overId);
+      
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const newFaq = arrayMove(faqItems, oldIndex, newIndex);
+        updateSection('faq', newFaq);
+      }
+      return;
+    }
   };
 
   // Export functions
