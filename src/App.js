@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { DragDropContext } from 'react-beautiful-dnd';
+import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { arrayMove } from '@dnd-kit/sortable';
 import AmazonHeader from './components/AmazonHeader';
 import ProductSection from './components/ProductSection';
 import ContentSection from './components/ContentSection';
@@ -67,37 +68,42 @@ function App() {
       programFor: [
         {
           id: '1',
-          text: 'Lorem ipsum dolor sit amet consectetur'
+          text: "You're looking to grow your family through assisted reproductive technology (fertility treatment), adoption, or surrogacy"
         },
         {
           id: '2',
-          text: 'Sed do eiusmod tempor incididunt ut labore'
+          text: "You're thinking ahead for fertility preservation (sperm and egg freezing)"
         },
         {
           id: '3',
-          text: 'Ut enim ad minim veniam quis nostrud'
-        },
-        {
-          id: '4',
-          text: 'Duis aute irure dolor in reprehenderit'
+          text: "You're looking for relief from the financial, emotional, and administrative burden of navigating fertility treatment"
         }
       ],
       testimonials: [
         {
           id: '1',
-          text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-          author: '– Lorem Ipsum'
+          text: 'This program changed my life! I feel healthier and more energetic than ever before. Highly recommend to anyone looking to improve their well-being.',
+          author: 'Sarah L., California'
+        },
+        {
+          id: '2',
+          text: 'I was skeptical at first, but the results speak for themselves. The personalized approach made all the difference. Thank you, Amazon Health!',
+          author: 'David P., New York'
+        },
+        {
+          id: '3',
+          text: 'Easy to follow and incredibly effective. The support system is fantastic, and I\'ve achieved goals I never thought possible.',
+          author: 'Emily R., Texas'
         }
       ],
       fromBrand: {
-        category: 'Lorem Ipsum Category',
-        title: 'Lorem ipsum dolor sit amet consectetur',
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+        category: 'Fay Nutrition Counseling Program',
+        title: 'Your journey to better health starts with Fay',
+        description: 'Fay is a leader in the health and wellness space and has helped over 100,000 people improve their health through expert nutrition care.',
         bulletPoints: [
-          'Lorem ipsum dolor sit amet consectetur adipiscing elit',
-          'Sed do eiusmod tempor incididunt ut labore et dolore',
-          'Ut enim ad minim veniam quis nostrud exercitation',
-          'Duis aute irure dolor in reprehenderit in voluptate'
+          { id: '1', text: '40,000+ 5-star reviews from Fay clients' },
+          { id: '2', text: 'Personalized 1:1 care from a registered dietitian' },
+          { id: '3', text: 'Covered by insurance for 90% of Americans' }
         ],
         image: null
       },
@@ -145,6 +151,44 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState(null);
 
+  // Configure sensors for drag and drop
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // Require 8px of movement before drag starts
+      },
+    })
+  );
+
+  // Migrate old data format on mount
+  useEffect(() => {
+    // Check if fromBrand bulletPoints need migration (from strings to objects)
+    if (projectData.sections?.fromBrand?.bulletPoints) {
+      const bullets = projectData.sections.fromBrand.bulletPoints;
+      const needsMigration = bullets.some(bullet => typeof bullet === 'string');
+      
+      if (needsMigration) {
+        const migratedBullets = bullets.map((bullet, index) => {
+          if (typeof bullet === 'string') {
+            return { id: `${Date.now()}-${index}`, text: bullet };
+          }
+          return bullet;
+        });
+        
+        setProjectData(prevData => ({
+          ...prevData,
+          sections: {
+            ...prevData.sections,
+            fromBrand: {
+              ...prevData.sections.fromBrand,
+              bulletPoints: migratedBullets
+            }
+          }
+        }));
+      }
+    }
+  }, []); // Only run once on mount
+
   // Auto-save functionality
   useEffect(() => {
     const autoSaveTimer = setTimeout(() => {
@@ -175,20 +219,68 @@ function App() {
   };
 
   // Handle drag and drop reordering
-  const handleDragEnd = (result) => {
-    if (!result.destination) return;
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
 
-    const { source, destination, type } = result;
-    
-    if (source.droppableId === destination.droppableId && source.index === destination.index) {
+    if (!over || active.id === over.id) {
       return;
     }
 
-    const sectionData = [...projectData.sections[type]];
-    const [removed] = sectionData.splice(source.index, 1);
-    sectionData.splice(destination.index, 0, removed);
+    // Parse the ID to get the type and actual ID
+    const activeId = active.id;
+    const overId = over.id;
 
-    updateSection(type, sectionData);
+    // Handle fromBrand bullet points
+    if (activeId.startsWith('fromBrand-')) {
+      const bulletPoints = [...(projectData.sections.fromBrand?.bulletPoints || [])];
+      const oldIndex = bulletPoints.findIndex(b => `fromBrand-${b.id}` === activeId);
+      const newIndex = bulletPoints.findIndex(b => `fromBrand-${b.id}` === overId);
+      
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const newBullets = arrayMove(bulletPoints, oldIndex, newIndex);
+        updateSection('fromBrand', { ...projectData.sections.fromBrand, bulletPoints: newBullets });
+      }
+      return;
+    }
+
+    // Handle programFor items
+    if (activeId.startsWith('programFor-')) {
+      const programForItems = [...(projectData.sections.programFor || [])];
+      const oldIndex = programForItems.findIndex(item => `programFor-${item.id}` === activeId);
+      const newIndex = programForItems.findIndex(item => `programFor-${item.id}` === overId);
+      
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const newItems = arrayMove(programForItems, oldIndex, newIndex);
+        updateSection('programFor', newItems);
+      }
+      return;
+    }
+
+    // Handle testimonials
+    if (activeId.startsWith('testimonial-')) {
+      const testimonials = [...(projectData.sections.testimonials || [])];
+      const oldIndex = testimonials.findIndex(item => `testimonial-${item.id}` === activeId);
+      const newIndex = testimonials.findIndex(item => `testimonial-${item.id}` === overId);
+      
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const newTestimonials = arrayMove(testimonials, oldIndex, newIndex);
+        updateSection('testimonials', newTestimonials);
+      }
+      return;
+    }
+
+    // Handle included items
+    if (activeId.startsWith('included-')) {
+      const includedItems = [...(projectData.sections.included || [])];
+      const oldIndex = includedItems.findIndex(item => `included-${item.id}` === activeId);
+      const newIndex = includedItems.findIndex(item => `included-${item.id}` === overId);
+      
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const newIncluded = arrayMove(includedItems, oldIndex, newIndex);
+        updateSection('included', newIncluded);
+      }
+      return;
+    }
   };
 
   // Export functions
@@ -294,7 +386,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-white">
-      <DragDropContext onDragEnd={handleDragEnd}>
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         {/* Amazon Header */}
         <AmazonHeader />
         
@@ -343,7 +435,7 @@ function App() {
             {notification.message}
           </div>
         )}
-      </DragDropContext>
+      </DndContext>
     </div>
   );
 }

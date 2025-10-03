@@ -1,9 +1,236 @@
 import React, { useEffect, useRef } from 'react';
-import { Droppable, Draggable } from 'react-beautiful-dnd';
+import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { PlusIcon, XMarkIcon, ChevronDownIcon, PhotoIcon } from '@heroicons/react/24/outline';
 import { v4 as uuidv4 } from 'uuid';
 import quoteMarks from '../assets/quotemarks.png';
 import jadeCheckmark from '../assets/jade-checkmark-transparent.png';
+
+// Sortable Testimonial Component
+const SortableTestimonial = ({ item, updateItem, removeItem, textareaRefs }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: `testimonial-${item.id}` });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} className="group relative text-center mb-12">
+      {/* Content with Glass Effect */}
+      <div
+        className="rounded-lg transition-all duration-200 relative"
+        style={{
+          padding: '16px',
+          margin: '-16px',
+          backgroundColor: isDragging ? 'rgba(255, 255, 255, 0.67)' : 'transparent',
+          backdropFilter: isDragging ? 'blur(10px)' : 'none',
+          boxShadow: isDragging ? '0 2px 12px rgba(0,0,0,0.1)' : 'none',
+          border: isDragging ? '1px solid rgba(0, 0, 0, 0.05)' : '1px solid transparent',
+        }}
+        onMouseEnter={(e) => {
+          if (!isDragging) {
+            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.67)';
+            e.currentTarget.style.backdropFilter = 'blur(10px)';
+            e.currentTarget.style.border = '1px solid rgba(0, 0, 0, 0.05)';
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!isDragging) {
+            e.currentTarget.style.backgroundColor = 'transparent';
+            e.currentTarget.style.backdropFilter = 'none';
+            e.currentTarget.style.border = '1px solid transparent';
+          }
+        }}
+      >
+        {/* Action Icons - Top Right */}
+        <div className="absolute top-4 right-4 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          {/* Drag Handle */}
+          <div
+            {...listeners}
+            {...attributes}
+            style={{ cursor: 'grab', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="5" cy="4" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="11" cy="4" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="5" cy="8" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="11" cy="8" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="5" cy="12" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="11" cy="12" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+            </svg>
+          </div>
+          {/* Delete Button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              removeItem('testimonials', item.id);
+            }}
+            style={{ cursor: 'pointer', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', padding: 0 }}
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="8" cy="8" r="7" fill="rgba(220, 38, 38, 0.1)" />
+              <path d="M10.5 5.5L5.5 10.5M5.5 5.5L10.5 10.5" stroke="rgba(220, 38, 38, 0.8)" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
+        <div>
+          <textarea
+            ref={(el) => (textareaRefs.current[item.id] = el)}
+            value={`\u201C${item.text}\u201D`}
+            onChange={(e) => {
+              let value = e.target.value;
+              value = value.replace(/^[\u201C\u201D"]|[\u201C\u201D"]$/g, '');
+              updateItem('testimonials', item.id, { text: value });
+            }}
+            onInput={(e) => {
+              e.target.style.height = 'auto';
+              e.target.style.height = e.target.scrollHeight + 'px';
+            }}
+            className="w-full bg-transparent border-none outline-none resize-none text-center overflow-hidden cursor-text"
+            style={{ fontFamily: 'Amazon Ember', fontSize: '20px', fontWeight: '400', lineHeight: '28px', color: '#0F1111', minHeight: '28px', marginBottom: '0' }}
+            placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit..."
+            rows={1}
+          />
+        </div>
+        <div className="flex items-center justify-center" style={{ fontFamily: 'Amazon Ember', fontSize: '14px', fontWeight: '400', lineHeight: '21px', color: '#565959' }}>
+          <span style={{ marginRight: '4px' }}>—</span>
+          <input
+            type="text"
+            value={item.author}
+            onChange={(e) => updateItem('testimonials', item.id, { author: e.target.value })}
+            className="bg-transparent border-none outline-none text-left cursor-text"
+            style={{ fontFamily: 'Amazon Ember', fontSize: '14px', fontWeight: '400', lineHeight: '21px', color: '#565959' }}
+            placeholder="Tanya F., Florida"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Sortable Bullet Point Component
+const SortableBullet = ({ bullet, bulletIndex, sections, onUpdateSection, jadeCheckmark }) => {
+  const bulletId = typeof bullet === 'object' && bullet.id ? `fromBrand-${bullet.id}` : `fromBrand-bullet-${bulletIndex}`;
+  const bulletText = typeof bullet === 'object' ? bullet.text : bullet;
+  
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: bulletId });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    marginBottom: bulletIndex === (sections.fromBrand?.bulletPoints || []).length - 1 ? '0' : '16px',
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} className="group relative">
+      {/* Content Row with Glass Effect on Hover */}
+      <div
+        className="flex items-center rounded-lg transition-all duration-200"
+        style={{ 
+          gap: '12px',
+          padding: '8px 12px',
+          margin: '-8px -12px',
+          backgroundColor: isDragging ? 'rgba(255, 255, 255, 0.67)' : 'transparent',
+          backdropFilter: isDragging ? 'blur(10px)' : 'none',
+          boxShadow: isDragging ? '0 2px 12px rgba(0,0,0,0.1)' : 'none',
+          border: isDragging ? '1px solid rgba(0, 0, 0, 0.05)' : '1px solid transparent',
+        }}
+        onMouseEnter={(e) => {
+          if (!isDragging) {
+            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.67)';
+            e.currentTarget.style.backdropFilter = 'blur(10px)';
+            e.currentTarget.style.border = '1px solid rgba(0, 0, 0, 0.05)';
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!isDragging) {
+            e.currentTarget.style.backgroundColor = 'transparent';
+            e.currentTarget.style.backdropFilter = 'none';
+            e.currentTarget.style.border = '1px solid transparent';
+          }
+        }}
+      >
+        <img 
+          src={jadeCheckmark} 
+          alt="checkmark" 
+          style={{ width: '15px', height: '11.25px', flexShrink: 0 }}
+        />
+        <div className="flex-1">
+          <input
+            type="text"
+            value={bulletText}
+            onChange={(e) => {
+              const newBullets = [...(sections.fromBrand?.bulletPoints || [])];
+              if (typeof newBullets[bulletIndex] === 'object') {
+                newBullets[bulletIndex] = { ...newBullets[bulletIndex], text: e.target.value };
+              } else {
+                newBullets[bulletIndex] = e.target.value;
+              }
+              onUpdateSection('fromBrand', { ...sections.fromBrand, bulletPoints: newBullets });
+            }}
+            className="w-full bg-transparent border-none outline-none cursor-text"
+            style={{ 
+              fontFamily: 'Amazon Ember', 
+              fontSize: '14px', 
+              fontWeight: '400', 
+              color: '#0F1111',
+              lineHeight: '20px'
+            }}
+            placeholder="40,000+ 5-star reviews from Fay clients"
+          />
+        </div>
+        {/* Action Icons - Right Side */}
+        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex-shrink-0" style={{ marginRight: '-4px' }}>
+          {/* Drag Handle */}
+          <div
+            {...listeners}
+            {...attributes}
+            style={{ cursor: 'grab', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="5" cy="4" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="11" cy="4" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="5" cy="8" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="11" cy="8" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="5" cy="12" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="11" cy="12" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+            </svg>
+          </div>
+          {/* Delete Button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              const newBullets = [...(sections.fromBrand?.bulletPoints || [])];
+              newBullets.splice(bulletIndex, 1);
+              onUpdateSection('fromBrand', { ...sections.fromBrand, bulletPoints: newBullets });
+            }}
+            style={{ cursor: 'pointer', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', padding: 0 }}
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="8" cy="8" r="7" fill="rgba(220, 38, 38, 0.1)" />
+              <path d="M10.5 5.5L5.5 10.5M5.5 5.5L10.5 10.5" stroke="rgba(220, 38, 38, 0.8)" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const ContentSection = ({ sections, onUpdateSection }) => {
   const textareaRefs = useRef({});
@@ -58,76 +285,22 @@ const ContentSection = ({ sections, onUpdateSection }) => {
         </div>
 
         {/* Testimonials Stack */}
-        <Droppable droppableId="testimonials" type="testimonials">
-          {(provided) => (
-            <div {...provided.droppableProps} ref={provided.innerRef} className="mb-6 max-w-4xl mx-auto">
-              {sections.testimonials?.map((item, index) => (
-                <Draggable key={item.id} draggableId={item.id} index={index}>
-                  {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      className={`group hover:shadow-sm transition-shadow relative text-center mb-12 ${
-                        snapshot.isDragging ? 'shadow-lg bg-white rounded-lg p-4' : ''
-                      }`}
-                    >
-                      <div {...provided.dragHandleProps} className="absolute top-2 left-2 cursor-grab opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="w-2 h-4 flex flex-col justify-center space-y-0.5">
-                          <div className="w-full h-0.5 bg-gray-400 rounded"></div>
-                          <div className="w-full h-0.5 bg-gray-400 rounded"></div>
-                          <div className="w-full h-0.5 bg-gray-400 rounded"></div>
-                        </div>
-                      </div>
-
-                      {/* Testimonial Text */}
-                      <div>
-                        <textarea
-                          ref={(el) => (textareaRefs.current[item.id] = el)}
-                          value={`\u201C${item.text}\u201D`}
-                          onChange={(e) => {
-                            let value = e.target.value;
-                            // Remove quotes if user adds them, we'll add them automatically
-                            value = value.replace(/^[\u201C\u201D"]|[\u201C\u201D"]$/g, '');
-                            updateItem('testimonials', item.id, { text: value });
-                          }}
-                          onInput={(e) => {
-                            e.target.style.height = 'auto';
-                            e.target.style.height = e.target.scrollHeight + 'px';
-                          }}
-                          className="w-full bg-transparent border-none outline-none resize-none text-center overflow-hidden"
-                          style={{ fontFamily: 'Amazon Ember', fontSize: '20px', fontWeight: '400', lineHeight: '28px', color: '#0F1111', minHeight: '28px', marginBottom: '0' }}
-                          placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit..."
-                          rows={1}
-                        />
-                      </div>
-
-                      {/* Author */}
-                      <div className="flex items-center justify-center" style={{ fontFamily: 'Amazon Ember', fontSize: '14px', fontWeight: '400', lineHeight: '21px', color: '#565959' }}>
-                        <span style={{ marginRight: '4px' }}>—</span>
-                        <input
-                          type="text"
-                          value={item.author}
-                          onChange={(e) => updateItem('testimonials', item.id, { author: e.target.value })}
-                          className="bg-transparent border-none outline-none text-left"
-                          style={{ fontFamily: 'Amazon Ember', fontSize: '14px', fontWeight: '400', lineHeight: '21px', color: '#565959' }}
-                          placeholder="Tanya F., Florida"
-                        />
-                      </div>
-
-                      <button
-                        onClick={() => removeItem('testimonials', item.id)}
-                        className="absolute top-2 right-2 p-1 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <XMarkIcon className="w-4 h-4" />
-                      </button>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
+        <SortableContext 
+          items={(sections.testimonials || []).map(item => `testimonial-${item.id}`)}
+          strategy={verticalListSortingStrategy}
+        >
+          <div className="mb-6 max-w-4xl mx-auto" style={{ paddingTop: '16px' }}>
+            {sections.testimonials?.map((item) => (
+              <SortableTestimonial
+                key={`testimonial-${item.id}`}
+                item={item}
+                updateItem={updateItem}
+                removeItem={removeItem}
+                textareaRefs={textareaRefs}
+              />
+            ))}
+          </div>
+        </SortableContext>
         <div className="flex justify-center">
           <button
             onClick={() => addItem('testimonials', { 
@@ -250,58 +423,37 @@ const ContentSection = ({ sections, onUpdateSection }) => {
 
             {/* Bullet Points */}
             <div style={{ backgroundColor: '#F0F2F2', padding: '24px', borderRadius: '8px' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                {(sections.fromBrand?.bulletPoints || []).map((bullet, bulletIndex) => (
-                  <div key={bulletIndex} className="group flex items-center" style={{ gap: '12px' }}>
-                    <img 
-                      src={jadeCheckmark} 
-                      alt="checkmark" 
-                      style={{ width: '15px', height: '11.25px', flexShrink: 0 }}
+              <SortableContext
+                items={(sections.fromBrand?.bulletPoints || []).map((bullet, bulletIndex) => 
+                  typeof bullet === 'object' && bullet.id ? `fromBrand-${bullet.id}` : `fromBrand-bullet-${bulletIndex}`
+                )}
+                strategy={verticalListSortingStrategy}
+              >
+                <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '16px', paddingTop: '12px' }}>
+                  {(sections.fromBrand?.bulletPoints || []).map((bullet, bulletIndex) => (
+                    <SortableBullet
+                      key={typeof bullet === 'object' && bullet.id ? `fromBrand-${bullet.id}` : `fromBrand-bullet-${bulletIndex}`}
+                      bullet={bullet}
+                      bulletIndex={bulletIndex}
+                      sections={sections}
+                      onUpdateSection={onUpdateSection}
+                      jadeCheckmark={jadeCheckmark}
                     />
-                    <div className="flex-1 relative">
-                      <input
-                        type="text"
-                        value={bullet}
-                        onChange={(e) => {
-                          const newBullets = [...(sections.fromBrand?.bulletPoints || [])];
-                          newBullets[bulletIndex] = e.target.value;
-                          onUpdateSection('fromBrand', { ...sections.fromBrand, bulletPoints: newBullets });
-                        }}
-                        className="w-full bg-transparent border-none outline-none"
-                        style={{ 
-                          fontFamily: 'Amazon Ember', 
-                          fontSize: '14px', 
-                          fontWeight: '400', 
-                          color: '#0F1111',
-                          lineHeight: '20px'
-                        }}
-                        placeholder="40,000+ 5-star reviews from Fay clients"
-                      />
-                      <button
-                        onClick={() => {
-                          const newBullets = [...(sections.fromBrand?.bulletPoints || [])];
-                          newBullets.splice(bulletIndex, 1);
-                          onUpdateSection('fromBrand', { ...sections.fromBrand, bulletPoints: newBullets });
-                        }}
-                        className="absolute top-0 right-0 p-1 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <XMarkIcon className="w-3 h-3" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-                <button
-                  onClick={() => {
-                    const newBullets = [...(sections.fromBrand?.bulletPoints || []), 'New benefit point'];
-                    onUpdateSection('fromBrand', { ...sections.fromBrand, bulletPoints: newBullets });
-                  }}
-                  className="flex items-center text-amazon-orange hover:text-amazon-orange-dark"
-                  style={{ gap: '8px', fontFamily: 'Amazon Ember', fontSize: '13px', fontWeight: '400' }}
-                >
-                  <PlusIcon className="w-4 h-4" />
-                  Add Bullet Point
-                </button>
-              </div>
+                  ))}
+                </div>
+              </SortableContext>
+              <button
+                onClick={() => {
+                  const newBullet = { id: uuidv4(), text: 'New benefit point' };
+                  const newBullets = [...(sections.fromBrand?.bulletPoints || []), newBullet];
+                  onUpdateSection('fromBrand', { ...sections.fromBrand, bulletPoints: newBullets });
+                }}
+                className="flex items-center text-amazon-orange hover:text-amazon-orange-dark"
+                style={{ gap: '8px', fontFamily: 'Amazon Ember', fontSize: '13px', fontWeight: '400' }}
+              >
+                <PlusIcon className="w-4 h-4" />
+                Add Bullet Point
+              </button>
             </div>
           </div>
         </div>
@@ -445,69 +597,50 @@ const ContentSection = ({ sections, onUpdateSection }) => {
       {/* FAQ Section */}
       <div className="pt-6 border-t border-amazon-border-light">
         <h2 className="text-xl font-bold mb-5 text-amazon-text">Frequently Asked Questions</h2>
-        <Droppable droppableId="faq" type="faq">
-          {(provided) => (
-            <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-4 mb-6">
-              {sections.faq?.map((item, index) => (
-                <Draggable key={item.id} draggableId={item.id} index={index}>
-                  {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      className={`group border border-amazon-border-light rounded-lg overflow-hidden relative ${
-                        snapshot.isDragging ? 'shadow-lg' : ''
-                      }`}
-                    >
-                      <div {...provided.dragHandleProps} className="absolute top-2 left-2 cursor-grab z-10">
-                        <div className="w-2 h-4 flex flex-col justify-center space-y-0.5">
-                          <div className="w-full h-0.5 bg-gray-400 rounded"></div>
-                          <div className="w-full h-0.5 bg-gray-400 rounded"></div>
-                          <div className="w-full h-0.5 bg-gray-400 rounded"></div>
-                        </div>
-                      </div>
-                      <div 
-                        className="bg-amazon-bg p-4 cursor-pointer hover:bg-gray-100 pl-8"
-                        onClick={() => toggleFAQ(item.id)}
-                      >
-                        <div className="flex items-center justify-between">
-                          <input
-                            type="text"
-                            value={item.question}
-                            onChange={(e) => updateItem('faq', item.id, { question: e.target.value })}
-                            className="font-medium text-sm text-amazon-text bg-transparent border-none outline-none flex-1 mr-4"
-                            placeholder="Lorem ipsum dolor sit amet?"
-                            onClick={(e) => e.stopPropagation()}
-                          />
-                          <ChevronDownIcon className={`w-4 h-4 text-amazon-text-light transition-transform ${
-                            item.isOpen ? 'rotate-180' : ''
-                          }`} />
-                        </div>
-                      </div>
-                      {item.isOpen && (
-                        <div className="p-4 bg-white">
-                          <textarea
-                            value={item.answer}
-                            onChange={(e) => updateItem('faq', item.id, { answer: e.target.value })}
-                            className="text-sm text-amazon-text leading-5 w-full bg-transparent border-none outline-none resize-none"
-                            placeholder="Lorem ipsum dolor sit amet consectetur..."
-                            rows={3}
-                          />
-                        </div>
-                      )}
-                      <button
-                        onClick={() => removeItem('faq', item.id)}
-                        className="absolute top-2 right-2 p-1 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                      >
-                        <XMarkIcon className="w-4 h-4" />
-                      </button>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
+        <div className="space-y-4 mb-6">
+          {sections.faq?.map((item) => (
+            <div
+              key={item.id}
+              className="group border border-amazon-border-light rounded-lg overflow-hidden relative"
+            >
+              <div 
+                className="bg-amazon-bg p-4 cursor-pointer hover:bg-gray-100"
+                onClick={() => toggleFAQ(item.id)}
+              >
+                <div className="flex items-center justify-between">
+                  <input
+                    type="text"
+                    value={item.question}
+                    onChange={(e) => updateItem('faq', item.id, { question: e.target.value })}
+                    className="font-medium text-sm text-amazon-text bg-transparent border-none outline-none flex-1 mr-4"
+                    placeholder="Lorem ipsum dolor sit amet?"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                  <ChevronDownIcon className={`w-4 h-4 text-amazon-text-light transition-transform ${
+                    item.isOpen ? 'rotate-180' : ''
+                  }`} />
+                </div>
+              </div>
+              {item.isOpen && (
+                <div className="p-4 bg-white">
+                  <textarea
+                    value={item.answer}
+                    onChange={(e) => updateItem('faq', item.id, { answer: e.target.value })}
+                    className="text-sm text-amazon-text leading-5 w-full bg-transparent border-none outline-none resize-none"
+                    placeholder="Lorem ipsum dolor sit amet consectetur..."
+                    rows={3}
+                  />
+                </div>
+              )}
+              <button
+                onClick={() => removeItem('faq', item.id)}
+                className="absolute top-2 right-2 p-1 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+              >
+                <XMarkIcon className="w-4 h-4" />
+              </button>
             </div>
-          )}
-        </Droppable>
+          ))}
+        </div>
         <button
           onClick={() => addItem('faq', { 
             question: 'New question?', 

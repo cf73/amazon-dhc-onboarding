@@ -1,6 +1,214 @@
 import React, { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { PlusIcon, PhotoIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+
+// Sortable What's Included Item
+const SortableIncludedItem = ({ item, data, onUpdate }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: `included-${item.id}` });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} className="group grid grid-cols-[200px_1fr] border-b border-gray-200 last:border-b-0 relative">
+      {/* Glass effect overlay */}
+      <div
+        className="absolute inset-0 rounded transition-all duration-200 pointer-events-none"
+        style={{
+          backgroundColor: isDragging ? 'rgba(255, 255, 255, 0.67)' : 'transparent',
+          backdropFilter: isDragging ? 'blur(10px)' : 'none',
+          boxShadow: isDragging ? '0 2px 12px rgba(0,0,0,0.1)' : 'none',
+          border: isDragging ? '1px solid rgba(0, 0, 0, 0.05)' : '1px solid transparent',
+          zIndex: 1,
+        }}
+      />
+      
+      <div className="bg-gray-100 p-3 relative z-10" style={{ fontSize: '14px', fontWeight: '400', color: '#0F1111', lineHeight: '20px' }}>
+        <input
+          type="text"
+          value={item.title}
+          onChange={(e) => {
+            const updatedIncluded = data.sections.included.map(includedItem =>
+              includedItem.id === item.id ? { ...includedItem, title: e.target.value } : includedItem
+            );
+            onUpdate({ sections: { ...data.sections, included: updatedIncluded } });
+          }}
+          className="w-full bg-transparent border-none outline-none"
+          style={{ fontSize: '14px', fontWeight: '400', color: '#0F1111', lineHeight: '20px' }}
+          placeholder="Lorem ipsum dolor"
+        />
+      </div>
+      <div className="p-3 relative z-10">
+        <textarea
+          value={item.description}
+          onChange={(e) => {
+            const updatedIncluded = data.sections.included.map(includedItem =>
+              includedItem.id === item.id ? { ...includedItem, description: e.target.value } : includedItem
+            );
+            onUpdate({ sections: { ...data.sections, included: updatedIncluded } });
+          }}
+          className="w-full bg-transparent border-none outline-none resize-none"
+          style={{ fontSize: '14px', fontWeight: '400', color: '#0F1111', lineHeight: '20px', paddingRight: '60px' }}
+          placeholder="Lorem ipsum dolor sit amet consectetur"
+          rows={2}
+        />
+        {/* Action Icons - Right Side */}
+        <div className="absolute top-2 right-2 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20">
+          {/* Drag Handle */}
+          <div
+            {...listeners}
+            {...attributes}
+            style={{ cursor: 'grab', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="5" cy="4" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="11" cy="4" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="5" cy="8" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="11" cy="8" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="5" cy="12" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="11" cy="12" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+            </svg>
+          </div>
+          {/* Delete Button */}
+          <button
+            onClick={() => {
+              const updatedIncluded = data.sections.included.filter(includedItem => includedItem.id !== item.id);
+              onUpdate({ sections: { ...data.sections, included: updatedIncluded } });
+            }}
+            style={{ cursor: 'pointer', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', padding: 0 }}
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="8" cy="8" r="7" fill="rgba(220, 38, 38, 0.1)" />
+              <path d="M10.5 5.5L5.5 10.5M5.5 5.5L10.5 10.5" stroke="rgba(220, 38, 38, 0.8)" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Sortable Program For Item
+const SortableProgramForItem = ({ item, index, data, onUpdate }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: `programFor-${item.id}` });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    marginTop: index === 0 ? '0' : '20px',
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} className="group relative">
+      {/* Content Row with Glass Effect */}
+      <div 
+        className="flex rounded-lg transition-all duration-200"
+        style={{ 
+          gap: '12px', 
+          alignItems: 'flex-start',
+          padding: '8px 12px',
+          margin: '-8px -12px',
+          backgroundColor: isDragging ? 'rgba(255, 255, 255, 0.67)' : 'transparent',
+          backdropFilter: isDragging ? 'blur(10px)' : 'none',
+          boxShadow: isDragging ? '0 2px 12px rgba(0,0,0,0.1)' : 'none',
+          border: isDragging ? '1px solid rgba(0, 0, 0, 0.05)' : '1px solid transparent',
+        }}
+        onMouseEnter={(e) => {
+          if (!isDragging) {
+            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.67)';
+            e.currentTarget.style.backdropFilter = 'blur(10px)';
+            e.currentTarget.style.border = '1px solid rgba(0, 0, 0, 0.05)';
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!isDragging) {
+            e.currentTarget.style.backgroundColor = 'transparent';
+            e.currentTarget.style.backdropFilter = 'none';
+            e.currentTarget.style.border = '1px solid transparent';
+          }
+        }}
+      >
+        <div className="flex-shrink-0" style={{ width: '24px', height: '24px', marginTop: '0px' }}>
+          <svg width="24" height="24" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12.0498 21.9219C17.0204 21.9219 21.0498 17.8924 21.0498 12.9219C21.0498 7.95131 17.0204 3.92188 12.0498 3.92188C7.07924 3.92188 3.0498 7.95131 3.0498 12.9219C3.0498 17.8924 7.07924 21.9219 12.0498 21.9219Z" stroke="#0F1111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+            <path d="M16 9.92188L10 15.9219L7.5 13.4219" stroke="#159B8E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+          </svg>
+        </div>
+        <div className="flex-1" style={{ display: 'flex', alignItems: 'center', minHeight: '24px' }}>
+          <textarea
+            value={item.text}
+            onChange={(e) => {
+              const currentProgramFor = data.sections?.programFor || [];
+              const updatedProgramFor = currentProgramFor.map(programItem =>
+                programItem.id === item.id ? { ...programItem, text: e.target.value } : programItem
+              );
+              onUpdate({ sections: { ...data.sections, programFor: updatedProgramFor } });
+            }}
+            onInput={(e) => {
+              e.target.style.height = 'auto';
+              e.target.style.height = e.target.scrollHeight + 'px';
+            }}
+            className="w-full bg-transparent border-none outline-none resize-none overflow-hidden cursor-text"
+            style={{ fontSize: '14px', fontWeight: '400', color: '#0F1111', lineHeight: '20px', padding: '0', minHeight: '20px' }}
+            placeholder="Lorem ipsum dolor sit amet..."
+            rows={1}
+          />
+        </div>
+        {/* Action Icons - Right Side */}
+        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex-shrink-0" style={{ marginRight: '-4px', marginTop: '0px' }}>
+          {/* Drag Handle */}
+          <div
+            {...listeners}
+            {...attributes}
+            style={{ cursor: 'grab', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="5" cy="4" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="11" cy="4" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="5" cy="8" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="11" cy="8" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="5" cy="12" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+              <circle cx="11" cy="12" r="1.2" fill="rgba(142, 68, 173, 0.6)" />
+            </svg>
+          </div>
+          {/* Delete Button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              const currentProgramFor = data.sections?.programFor || [];
+              const updatedProgramFor = currentProgramFor.filter(programItem => programItem.id !== item.id);
+              onUpdate({ sections: { ...data.sections, programFor: updatedProgramFor } });
+            }}
+            style={{ cursor: 'pointer', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', padding: 0 }}
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="8" cy="8" r="7" fill="rgba(220, 38, 38, 0.1)" />
+              <path d="M10.5 5.5L5.5 10.5M5.5 5.5L10.5 10.5" stroke="rgba(220, 38, 38, 0.8)" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const ProductSection = ({ data, onUpdate, onImageUpload }) => {
   const [selectedThumbnail, setSelectedThumbnail] = useState(0);
@@ -151,49 +359,19 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
         <div style={{ marginBottom: '24px' }}>
           <h3 style={{ fontSize: '18px', color: '#0F1111', fontWeight: '700', marginBottom: '8px' }}>What's included*</h3>
           <div className="border border-gray-200 rounded mb-3">
-            {data.sections?.included?.map((item, index) => (
-              <div key={item.id} className="group grid grid-cols-[200px_1fr] border-b border-gray-200 last:border-b-0">
-                <div className="bg-gray-100 p-3 relative" style={{ fontSize: '14px', fontWeight: '400', color: '#0F1111', lineHeight: '20px' }}>
-                  <input
-                    type="text"
-                    value={item.title}
-                    onChange={(e) => {
-                      const updatedIncluded = data.sections.included.map(includedItem =>
-                        includedItem.id === item.id ? { ...includedItem, title: e.target.value } : includedItem
-                      );
-                      onUpdate({ sections: { ...data.sections, included: updatedIncluded } });
-                    }}
-                    className="w-full bg-transparent border-none outline-none"
-                    style={{ fontSize: '14px', fontWeight: '400', color: '#0F1111', lineHeight: '20px' }}
-                    placeholder="Lorem ipsum dolor"
-                  />
-                </div>
-                <div className="p-3 relative">
-                  <textarea
-                    value={item.description}
-                    onChange={(e) => {
-                      const updatedIncluded = data.sections.included.map(includedItem =>
-                        includedItem.id === item.id ? { ...includedItem, description: e.target.value } : includedItem
-                      );
-                      onUpdate({ sections: { ...data.sections, included: updatedIncluded } });
-                    }}
-                    className="w-full bg-transparent border-none outline-none resize-none"
-                    style={{ fontSize: '14px', fontWeight: '400', color: '#0F1111', lineHeight: '20px' }}
-                    placeholder="Lorem ipsum dolor sit amet consectetur"
-                    rows={2}
-                  />
-                  <button
-                    onClick={() => {
-                      const updatedIncluded = data.sections.included.filter(includedItem => includedItem.id !== item.id);
-                      onUpdate({ sections: { ...data.sections, included: updatedIncluded } });
-                    }}
-                    className="absolute top-2 right-2 p-1 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <XMarkIcon className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            ))}
+            <SortableContext
+              items={(data.sections?.included || []).map(item => `included-${item.id}`)}
+              strategy={verticalListSortingStrategy}
+            >
+              {data.sections?.included?.map((item) => (
+                <SortableIncludedItem
+                  key={`included-${item.id}`}
+                  item={item}
+                  data={data}
+                  onUpdate={onUpdate}
+                />
+              ))}
+            </SortableContext>
           </div>
           <button
             onClick={() => {
@@ -217,60 +395,26 @@ const ProductSection = ({ data, onUpdate, onImageUpload }) => {
         <div style={{ marginBottom: '24px' }}>
           <div style={{ border: '1px solid #D5D9D9', borderRadius: '8px', padding: '20px', marginBottom: '12px' }}>
             <h3 style={{ fontSize: '16px', color: '#0F1111', fontWeight: '700', lineHeight: '20px', marginBottom: '20px' }}>Is this program for me?</h3>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              {(data.sections?.programFor || [
-                { id: '1', text: "You're looking to grow your family through assisted reproductive technology (fertility treatment), adoption, or surrogacy" },
-                { id: '2', text: "You're thinking ahead for fertility preservation (sperm and egg freezing)" },
-                { id: '3', text: "You're looking for relief from the financial, emotional, and administrative burden of navigating fertility treatment" }
-              ]).map((item, index) => (
-                <div key={item.id} className="group flex" style={{ gap: '12px', marginTop: index === 0 ? '0' : '20px', alignItems: 'flex-start' }}>
-                  <div className="flex-shrink-0" style={{ width: '24px', height: '24px', marginTop: '0px' }}>
-                    <svg width="24" height="24" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12.0498 21.9219C17.0204 21.9219 21.0498 17.8924 21.0498 12.9219C21.0498 7.95131 17.0204 3.92188 12.0498 3.92188C7.07924 3.92188 3.0498 7.95131 3.0498 12.9219C3.0498 17.8924 7.07924 21.9219 12.0498 21.9219Z" stroke="#0F1111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
-                      <path d="M16 9.92188L10 15.9219L7.5 13.4219" stroke="#159B8E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
-                    </svg>
-                  </div>
-                  <div className="flex-1 relative" style={{ display: 'flex', alignItems: 'center', minHeight: '24px' }}>
-                    <textarea
-                      value={item.text}
-                      onChange={(e) => {
-                        const currentProgramFor = data.sections?.programFor || [
-                          { id: '1', text: "You're looking to grow your family through assisted reproductive technology (fertility treatment), adoption, or surrogacy" },
-                          { id: '2', text: "You're thinking ahead for fertility preservation (sperm and egg freezing)" },
-                          { id: '3', text: "You're looking for relief from the financial, emotional, and administrative burden of navigating fertility treatment" }
-                        ];
-                        const updatedProgramFor = currentProgramFor.map(programItem =>
-                          programItem.id === item.id ? { ...programItem, text: e.target.value } : programItem
-                        );
-                        onUpdate({ sections: { ...data.sections, programFor: updatedProgramFor } });
-                      }}
-                      onInput={(e) => {
-                        e.target.style.height = 'auto';
-                        e.target.style.height = e.target.scrollHeight + 'px';
-                      }}
-                      className="w-full bg-transparent border-none outline-none resize-none overflow-hidden"
-                      style={{ fontSize: '14px', fontWeight: '400', color: '#0F1111', lineHeight: '20px', padding: '0', minHeight: '20px' }}
-                      placeholder="Lorem ipsum dolor sit amet..."
-                      rows={1}
-                    />
-                    <button
-                      onClick={() => {
-                        const currentProgramFor = data.sections?.programFor || [
-                          { id: '1', text: "You're looking to grow your family through assisted reproductive technology (fertility treatment), adoption, or surrogacy" },
-                          { id: '2', text: "You're thinking ahead for fertility preservation (sperm and egg freezing)" },
-                          { id: '3', text: "You're looking for relief from the financial, emotional, and administrative burden of navigating fertility treatment" }
-                        ];
-                        const updatedProgramFor = currentProgramFor.filter(programItem => programItem.id !== item.id);
-                        onUpdate({ sections: { ...data.sections, programFor: updatedProgramFor } });
-                      }}
-                      className="absolute top-1 right-1 p-1 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <XMarkIcon className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <SortableContext
+              items={(data.sections?.programFor || []).map(item => `programFor-${item.id}`)}
+              strategy={verticalListSortingStrategy}
+            >
+              <div style={{ display: 'flex', flexDirection: 'column', paddingTop: '12px' }}>
+                {(data.sections?.programFor || [
+                  { id: '1', text: "You're looking to grow your family through assisted reproductive technology (fertility treatment), adoption, or surrogacy" },
+                  { id: '2', text: "You're thinking ahead for fertility preservation (sperm and egg freezing)" },
+                  { id: '3', text: "You're looking for relief from the financial, emotional, and administrative burden of navigating fertility treatment" }
+                ]).map((item, index) => (
+                  <SortableProgramForItem
+                    key={`programFor-${item.id}`}
+                    item={item}
+                    index={index}
+                    data={data}
+                    onUpdate={onUpdate}
+                  />
+                ))}
+              </div>
+            </SortableContext>
             <button
               onClick={() => {
                 const currentProgramFor = data.sections?.programFor || [
